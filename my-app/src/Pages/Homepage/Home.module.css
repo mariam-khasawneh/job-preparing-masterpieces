@@ -1,0 +1,150 @@
+/* Start Hero Section Style */
+.heroSection {
+  height: calc(100vh -70px);
+}
+
+.heroWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 48px;
+  flex: 1 0 0;
+  align-self: stretch;
+  padding: 96px 64px;
+  height: auto;
+}
+
+.heroSwitcher {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.switcher {
+  display: flex;
+  padding: 2px 2px 2px 16px;
+  align-items: center;
+  gap: 8px;
+  border-radius: 360px;
+  background: #dde1ff;
+}
+
+.switchweCircle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #5b4cff;
+}
+
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+  width: 60%;
+}
+
+.heroDisplay {
+  text-align: center;
+  font-family: "Space Grotesk", sans-serif;
+}
+
+.heroBody {
+  text-align: center;
+  line-height: 1.5rem;
+}
+
+.heroBtns {
+  display: flex;
+  padding: 8px;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  border-radius: 8px;
+  border: var(--spacing-05, 2px) dashed #dde1ff;
+}
+
+@media screen and (min-width: 1024px) {
+  .heroContent {
+    width: 60%;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .heroContent {
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .heroContent {
+    width: 100%;
+  }
+}
+
+/* End Hero Section Style */
+
+/* =========================================================================================================================================== */
+
+/* Start About Section Style */
+.aboutSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+}
+
+.aboutContentWrapper,
+.aboutImgtWrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 0;
+}
+
+.aboutContentWrapper {
+  justify-content: center;
+  align-items: flex-start;
+  gap: 32px;
+}
+
+.aboutHeading {
+  align-self: stretch;
+  color: #5b4cff;
+  font-family: "Space Grotesk";
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.175;
+  text-transform: capitalize;
+}
+
+.aboutBody {
+  color: #596a95;
+  text-align: justify;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  line-height: 40px; /* 200% */
+}
+
+@media screen and (min-width: 1024px) {
+  .aboutSection {
+    flex-direction: row;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .aboutSection {
+    flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .aboutSection {
+    flex-direction: column;
+  }
+}
+/* End About Section Style */
