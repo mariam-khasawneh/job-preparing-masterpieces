@@ -8,8 +8,8 @@ import {
 import {
   H6,
   Body,
-  H1,
-  H2,
+  H3,
+  Display,
 } from "../../Components/Typography-components/Typography.jsx";
 
 // Page Component
@@ -29,29 +29,29 @@ function HeroSection() {
       <Section className={styles.heroSection}>
         <Wrapper dark className={styles.heroWrapper}>
           <div className={styles.heroSwitcher}>
-            <H6>Job Seeker</H6>
+            <H6 className={styles.switcherText}>Job Seeker</H6>
             <div className={styles.switcher}>
               <div className={styles.switchweCircle}></div>
             </div>
-            <H6>Job Coach</H6>
+            <H6 className={styles.switcherText}>Job Coach</H6>
           </div>
           <div className={styles.heroContent}>
-            <H1 className={styles.heroDisplay}>
+            <Display className={styles.heroDisplay}>
               Unlock Your Potential as a Job Coach with JobPortal
-            </H1>
+            </Display>
             <Body className={styles.heroBody}>
               Enhance Coaching Practice, Connect with Clients, and Maximize
               Impact in Career Development
             </Body>
           </div>
-          <div className={styles.heroBtns}>
-            <Link to="/login">
-              <Button primary extraSmall>
+          <div className={styles.heroBtnsContainer}>
+            <Link to="/login" className={styles.heroBtnLink}>
+              <Button primary extraSmall className={styles.heroBtn}>
                 Login
               </Button>
             </Link>
-            <Link to="/signup">
-              <Button secondary extraSmall>
+            <Link to="/signup" className={styles.heroBtnLink}>
+              <Button secondary extraSmall className={styles.heroBtn}>
                 Get started
               </Button>
             </Link>
@@ -67,16 +67,16 @@ function AboutSection() {
     <>
       <Section className={styles.aboutSection}>
         <Wrapper className={styles.aboutContentWrapper}>
-          <H2 className={styles.aboutHeading}>
+          <H3 className={styles.aboutHeading}>
             What Is <br></br> JobPortal ?
-          </H2>
-          <H6 className={styles.aboutBody}>
+          </H3>
+          <Body className={styles.aboutBody}>
             JobPortal offers job coaches a powerful platform to enhance their
             coaching practice, connect with clients, and maximize their impact
             in career development. As a job coach on JobPortal, you gain access
             to a suite of tools and resources designed to streamline your
             coaching process and elevate your services.
-          </H6>
+          </Body>
         </Wrapper>
         <Wrapper className={styles.aboutImgtWrapper}></Wrapper>
       </Section>
