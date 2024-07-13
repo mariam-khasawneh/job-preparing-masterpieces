@@ -1,7 +1,7 @@
 import { NavLink, Link } from "react-router-dom";
 import styles from "./Navbar.module.css";
 import Button from "../Button/Button";
-import { Body } from "../Typography-components/Typography";
+import { Caption } from "../Typography-components/Typography";
 
 function Navbar() {
   return (
@@ -9,32 +9,32 @@ function Navbar() {
       <ul className={styles.navLinks}>
         <li>
           <NavLink to="home" className={styles.navLink}>
-            <Body>Home</Body>
+            <Caption>Home</Caption>
           </NavLink>
         </li>
         <li>
           <NavLink to="/featuers" className={styles.navLink}>
-            <Body>Featuers</Body>
+            <Caption>Featuers</Caption>
           </NavLink>
         </li>
         <li>
           <NavLink to="/resources" className={styles.navLink}>
-            <Body>Resources</Body>
+            <Caption>Resources</Caption>
           </NavLink>
         </li>
         <li>
           <NavLink to="/how-It-work" className={styles.navLink}>
-            <Body>How It Work</Body>
+            <Caption>How It Work</Caption>
           </NavLink>
         </li>
         <li>
           <NavLink to="/contact" className={styles.navLink}>
-            <Body>Conatct</Body>
+            <Caption>Conatct</Caption>
           </NavLink>
         </li>
         <li>
           <NavLink to="/pricing" className={styles.navLink}>
-            <Body>Pricing</Body>
+            <Caption>Pricing</Caption>
           </NavLink>
         </li>
       </ul>
@@ -42,14 +42,14 @@ function Navbar() {
         <li>
           <Link to="/login">
             <Button primary extraSmall>
-              <Body>Login</Body>
+              <Caption>Login</Caption>
             </Button>
           </Link>
         </li>
         <li>
           <Link to="/signup">
             <Button secondary extraSmall>
-              <Body> Get Started</Body>
+              <Caption> Get Started</Caption>
             </Button>
           </Link>
         </li>
