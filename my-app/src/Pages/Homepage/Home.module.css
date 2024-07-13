@@ -31,6 +31,10 @@
   background: #dde1ff;
 }
 
+.switcherText {
+  text-align: center;
+}
+
 .switchweCircle {
   width: 12px;
   height: 12px;
@@ -44,12 +48,12 @@
   justify-content: center;
   align-items: center;
   gap: 32px;
-  width: 60%;
 }
 
 .heroDisplay {
   text-align: center;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Phudu", sans-serif;
+  font-weight: 700;
 }
 
 .heroBody {
@@ -57,25 +61,25 @@
   line-height: 1.5rem;
 }
 
-.heroBtns {
+.heroBtnsContainer {
   display: flex;
   padding: 8px;
   justify-content: center;
   align-items: center;
   gap: 16px;
   border-radius: 8px;
-  border: var(--spacing-05, 2px) dashed #dde1ff;
+  border: 2px dashed #dde1ff;
 }
 
 @media screen and (min-width: 1024px) {
   .heroContent {
-    width: 60%;
+    width: 70%;
   }
 }
 
 @media screen and (min-width: 768px) and (max-width: 1023px) {
   .heroContent {
-    width: 90%;
+    width: 80%;
   }
 }
 
@@ -113,7 +117,7 @@
 .aboutHeading {
   align-self: stretch;
   color: #5b4cff;
-  font-family: "Space Grotesk";
+  font-family: "Phudu", "Space Grotesk";
   font-size: 40px;
   font-style: normal;
   font-weight: 700;
@@ -126,8 +130,8 @@
   text-align: justify;
   font-family: "Inter";
   font-style: normal;
-  font-weight: 700;
-  line-height: 40px; /* 200% */
+  font-weight: 500;
+  line-height: 2rem;
 }
 
 @media screen and (min-width: 1024px) {
