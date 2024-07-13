@@ -1,0 +1,41 @@
+* {
+  margin: 0px;
+}
+.nav {
+  display: flex;
+  padding: 16px 96px;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #b7c2d4;
+  background: #f7fbfb;
+}
+
+.nav ul {
+  list-style: none;
+  display: flex;
+  padding: 0px;
+}
+
+.navLinks {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+}
+
+.navLink {
+  color: #596a95;
+  font-family: Inter;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.navLink:hover {
+  color: #5b4cff;
+}
+
+.navButtons {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
