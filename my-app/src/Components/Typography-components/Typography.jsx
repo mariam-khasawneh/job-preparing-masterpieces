@@ -102,5 +102,5 @@ export const Body = styled.p`
 `;
 
 export const Caption = styled.p`
-  font-size: 0.75rem;
+  font-size: 1rem;
 `;
