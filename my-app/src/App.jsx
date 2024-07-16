@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 // ===================================
 import { Home } from "./Pages/Homepage/Home";
-// import HeroSection from "./Pages/Homepage/Home";
 // ===================================
 import Featuers from "./Pages/Featuers/Featuers";
 import Resources from "./Pages/Resources-page/Resources";
@@ -12,6 +11,8 @@ import SignUp from "./Pages/SignUp/SignUp";
 import Login from "./Pages/Login/Login";
 import NotFound from "./Pages/404/NotFound";
 import Navbar from "./Components/Navbar/Navbar";
+import Courses from "./Pages/Courses/Courses";
+import Coaching from "./Pages/Coaching/Coaching";
 
 function App() {
   return (
@@ -22,6 +23,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="home" element={<Home />} />
           <Route path="featuers" element={<Featuers />} />
+          <Route path="courses" element={<Courses />} />
+          <Route path="coaching" element={<Coaching />} />
           <Route path="resources" element={<Resources />} />
           <Route path="how-It-work" element={<HowItWork />} />
           <Route path="contact" element={<Contact />} />
