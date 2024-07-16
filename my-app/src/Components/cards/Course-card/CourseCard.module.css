@@ -16,6 +16,15 @@
   height: 200px;
 }
 
+.courseName {
+  color: #081026;
+  font-family: Inter;
+  font-size: 1.125rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
 .courseInfo {
   display: flex;
   flex-direction: column;
@@ -49,8 +58,19 @@
   letter-spacing: -0.14px;
 }
 
+.btnLink {
+  display: flex;
+  align-self: stretch;
+  justify-content: center;
+  width: 100%;
+}
+
 .courseBtn {
   display: flex !important;
   align-self: stretch;
-  justify-content: center;
+  width: 100%;
+}
+
+Button {
+  width: 100%;
 }

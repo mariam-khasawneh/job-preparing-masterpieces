@@ -1,5 +1,6 @@
+import { Link } from "react-router-dom";
 import styles from "./CourseCard.module.css";
-import { Caption, H6 } from "../../Typography-components/Typography";
+import { Body, Caption } from "../../Typography-components/Typography";
 import Button from "../../Button/Button";
 import LessonsSVG from "./svg/LessonSvg";
 import StdSVG from "./svg/StdSVG";
@@ -13,7 +14,7 @@ function CourseCard() {
           {/* <img src={interviews} alt="" /> */}
         </div>
         <div className={styles.courseInfo}>
-          <H6 className={styles.courseName}> How To get the interviews</H6>
+          <Body className={styles.courseName}> How To get the interviews</Body>
           <div className={styles.courseStatistics}>
             <div className={styles.lessonsStatiscs}>
               <LessonsSVG />
@@ -28,9 +29,11 @@ function CourseCard() {
             How To get the interviews
           </Caption>
         </div>
-        <Button secondary extraSmall className={styles.courseBtn}>
-          Start Learning
-        </Button>
+        <Link to="/course" className={styles.btnLink}>
+          <Button secondary extraSmall className={styles.courseBtn}>
+            Start Learning
+          </Button>
+        </Link>
       </div>
     </>
   );
