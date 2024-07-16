@@ -13,6 +13,8 @@ import NotFound from "./Pages/404/NotFound";
 import Navbar from "./Components/Navbar/Navbar";
 import Courses from "./Pages/Courses/Courses";
 import Coaching from "./Pages/Coaching/Coaching";
+import Test from "./Pages/Test/Test";
+import Course from "./Pages/Course/Course";
 
 function App() {
   return (
@@ -31,6 +33,8 @@ function App() {
           <Route path="pricing" element={<Pricing />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="login" element={<Login />} />
+          <Route path="test" element={<Test />} />
+          <Route path="course" element={<Course />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
