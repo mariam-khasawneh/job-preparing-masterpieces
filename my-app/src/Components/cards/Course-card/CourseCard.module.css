@@ -1,0 +1,56 @@
+.card {
+  display: flex;
+  padding: 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 36px;
+  border-radius: 16px;
+  border: 2px solid #dae4f1;
+  align-self: stretch;
+}
+
+.courseImg {
+  align-self: stretch;
+  border-radius: 8px;
+  background: url(./imgs/interviews.jpg) lightgray 50% / cover no-repeat;
+  height: 200px;
+}
+
+.courseInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.courseName {
+  color: #081026;
+}
+
+.courseStatistics {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  align-self: stretch;
+}
+
+.lessonsStatiscs,
+.studentsStatiscs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.caption,
+.courseDescription {
+  color: #596a95;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.14px;
+}
+
+.courseBtn {
+  display: flex !important;
+  align-self: stretch;
+  justify-content: center;
+}
