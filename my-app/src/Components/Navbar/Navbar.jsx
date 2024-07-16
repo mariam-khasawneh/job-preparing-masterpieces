@@ -18,6 +18,16 @@ function Navbar() {
           </NavLink>
         </li>
         <li>
+          <NavLink to="/courses" className={styles.navLink}>
+            <Caption>Courses</Caption>
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/coaching" className={styles.navLink}>
+            <Caption>Coaching</Caption>
+          </NavLink>
+        </li>
+        <li>
           <NavLink to="/resources" className={styles.navLink}>
             <Caption>Resources</Caption>
           </NavLink>
