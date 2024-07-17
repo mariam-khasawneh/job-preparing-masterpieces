@@ -98,9 +98,9 @@ export const H6 = styled.h6`
 `;
 
 export const Body = styled.p`
-  font-size: 1.125rem;
+  font-size: 1rem;
 `;
 
 export const Caption = styled.p`
-  font-size: 1rem;
+  font-size: 0.875rem;
 `;
