@@ -34,7 +34,7 @@ function CoachCard() {
             <Body>rrrrrrrrrrrrrrrrrrrrrrr</Body>
           </div>
           <Link to="/coach-profile" className={styles.btnLink}>
-            <Button secondary extraSmall className={styles.sessionBtn}>
+            <Button primary extraSmall className={styles.sessionBtn}>
               Book Session
             </Button>
           </Link>
