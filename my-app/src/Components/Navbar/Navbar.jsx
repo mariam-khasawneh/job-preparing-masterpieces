@@ -51,14 +51,14 @@ function Navbar() {
       <ul className={styles.navButtons}>
         <li>
           <Link to="/login">
-            <Button primary extraSmall>
+            <Button secondary extraSmall>
               <Caption>Login</Caption>
             </Button>
           </Link>
         </li>
         <li>
           <Link to="/signup">
-            <Button secondary extraSmall>
+            <Button primary extraSmall>
               <Caption> Get Started</Caption>
             </Button>
           </Link>
