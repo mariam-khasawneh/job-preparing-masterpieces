@@ -1,26 +1,33 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 // ===================================
 import { Home } from "./Pages/Homepage/Home";
-// ===================================
 import Featuers from "./Pages/Featuers/Featuers";
 import Resources from "./Pages/Resources-page/Resources";
-import HowItWork from "./Pages/HowItWork/HowItWork";
 import Contact from "./Pages/Contact/Contact";
 import Pricing from "./Pages/Pricing/Pricing";
 import SignUp from "./Pages/SignUp/SignUp";
 import Login from "./Pages/Login/Login";
-import NotFound from "./Pages/404/NotFound";
+import NotFound from "./Pages/Errors/NotFound";
 import Navbar from "./Components/Navbar/Navbar";
 import Courses from "./Pages/Courses/Courses";
 import Coaching from "./Pages/Coaching/Coaching";
-import Test from "./Pages/Test/Test";
 import Course from "./Pages/Course/Course";
+import CoachProfile from "./Pages/CoachProfile/CoachProfile";
+import Blog from "./Pages/Blog/Blog";
+import Article from "./Pages/Blog/Article";
 
+// ===================================
+// Dashboard
+import DashboardHome from "./Dashboard/Pages/Home";
+import Layout from "./Dashboard/Components/Layout";
+import Members from "./Dashboard/Pages/Members";
+
+// ===================================
 function App() {
   return (
     <>
       <BrowserRouter>
-        <Navbar />
+        {/* <Navbar /> */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="home" element={<Home />} />
@@ -28,14 +35,21 @@ function App() {
           <Route path="courses" element={<Courses />} />
           <Route path="coaching" element={<Coaching />} />
           <Route path="resources" element={<Resources />} />
-          <Route path="how-It-work" element={<HowItWork />} />
           <Route path="contact" element={<Contact />} />
           <Route path="pricing" element={<Pricing />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="login" element={<Login />} />
-          <Route path="test" element={<Test />} />
           <Route path="course" element={<Course />} />
+          <Route path="coach-profile" element={<CoachProfile />} />
+          <Route path="blog" element={<Blog />} />
+          <Route path="article" element={<Article />} />
           <Route path="*" element={<NotFound />} />
+
+          {/* Dashboard */}
+          <Route path="dashboard" element={<Layout />}>
+            <Route path="home" element={<DashboardHome />} />
+            <Route path="members" element={<Members />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </>
