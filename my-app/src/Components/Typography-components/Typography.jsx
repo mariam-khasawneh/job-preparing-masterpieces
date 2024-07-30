@@ -98,6 +98,10 @@ export const H6 = styled.h6`
 `;
 
 export const Body = styled.p`
+  font-size: 1.125rem;
+`;
+
+export const SmallBody = styled.p`
   font-size: 1rem;
 `;
 
