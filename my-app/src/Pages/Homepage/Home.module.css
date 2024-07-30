@@ -1,20 +1,3 @@
-/* Start Hero Section Style */
-.heroSection {
-  height: calc(100vh -70px);
-}
-
-.heroWrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 48px;
-  flex: 1 0 0;
-  align-self: stretch;
-  padding: 96px 64px;
-  height: auto;
-}
-
 .heroSwitcher {
   display: flex;
   justify-content: center;
@@ -31,10 +14,6 @@
   background: #dde1ff;
 }
 
-.switcherText {
-  text-align: center;
-}
-
 .switchweCircle {
   width: 12px;
   height: 12px;
@@ -42,58 +21,6 @@
   background-color: #5b4cff;
 }
 
-.heroContent {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 32px;
-}
-
-.heroDisplay {
-  text-align: center;
-  font-family: "Phudu", sans-serif;
-  font-weight: 700;
-}
-
-.heroBody {
-  text-align: center;
-  line-height: 1.5rem;
-}
-
-.heroBtnsContainer {
-  display: flex;
-  padding: 8px;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  border-radius: 8px;
-  border: 2px dashed #dde1ff;
-}
-
-@media screen and (min-width: 1024px) {
-  .heroContent {
-    width: 70%;
-  }
-}
-
-@media screen and (min-width: 768px) and (max-width: 1023px) {
-  .heroContent {
-    width: 80%;
-  }
-}
-
-@media screen and (max-width: 767px) {
-  .heroContent {
-    width: 100%;
-  }
-}
-
-/* End Hero Section Style */
-
-/* =========================================================================================================================================== */
-
-/* Start About Section Style */
 .aboutSection {
   display: flex;
   justify-content: center;
@@ -113,42 +40,3 @@
   align-items: flex-start;
   gap: 32px;
 }
-
-.aboutHeading {
-  align-self: stretch;
-  color: #5b4cff;
-  font-family: "Phudu", "Space Grotesk";
-  font-size: 40px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 1.175;
-  text-transform: capitalize;
-}
-
-.aboutBody {
-  color: #596a95;
-  text-align: justify;
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 500;
-  line-height: 2rem;
-}
-
-@media screen and (min-width: 1024px) {
-  .aboutSection {
-    flex-direction: row;
-  }
-}
-
-@media screen and (min-width: 768px) and (max-width: 1023px) {
-  .aboutSection {
-    flex-direction: column;
-  }
-}
-
-@media screen and (max-width: 767px) {
-  .aboutSection {
-    flex-direction: column;
-  }
-}
-/* End About Section Style */
