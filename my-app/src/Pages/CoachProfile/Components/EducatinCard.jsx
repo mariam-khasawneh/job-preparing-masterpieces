@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import {
   Caption,
   Body,
+  SmallBody,
 } from "../../../Components/Typography-components/Typography";
 
 function EducatinCard() {
@@ -11,7 +12,7 @@ function EducatinCard() {
       <H6 className="font-semibold text-slate-900 leading-5	">
         Educational Background
       </H6>
-      <div className=" flex flex-col gap-4 w-full ">
+      <div className=" flex flex-col gap-7 w-full ">
         <CredentialRow />
         <CredentialRow />
         <CredentialRow />
@@ -23,16 +24,16 @@ function EducatinCard() {
 
 function CredentialRow() {
   return (
-    <div className=" flex flex-row gap-8 w-full self-stretch">
+    <div className=" flex flex-row gap-8 w-full self-stretch border-b pb-3">
       <div className="rounded-full bg-slate-200 w-14 h-14"></div>
       <div id="content" className=" flex flex-col gap-1 w-full">
         <div className="flex flex-col md:flex-row justify-between">
-          <Body className="font-semibold text-slate-700">
+          <SmallBody className="font-semibold text-slate-700">
             The University of Sydney
-          </Body>
+          </SmallBody>
           <Link>
             <div className="flex flex-row gap-2">
-              <Caption className="font-semibold text-indigo-600">
+              <Caption className="font-semibold text-primaryIndigo">
                 Show credential
               </Caption>
               <svg
