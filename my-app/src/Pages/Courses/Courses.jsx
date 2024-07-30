@@ -6,8 +6,10 @@ import CourseCard from "../../Components/cards/Course-card/CourseCard";
 function Courses() {
   return (
     <Section className="flex flex-col">
-      <div className="flex flex-col sm:flex-col lg:flex-row justify-between self-stretch	">
-        <H5 className="text-blue-900 font-inter font-semibold"> Our Courses</H5>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <H5 className="text-blue-900 font-inter font-semibold col-span-3 ">
+          Our Courses
+        </H5>
         <SearchBar />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  sm:ga-4 gap-6 pt-12">
