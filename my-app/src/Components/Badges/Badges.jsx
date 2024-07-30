@@ -16,7 +16,7 @@ const StyledBadges = styled.div`
 function Badges({ children }) {
   return (
     <StyledBadges>
-      <Caption className="text-indigo-700 font-medium">{children}</Caption>
+      <Caption className="text-indigo-700">{children}</Caption>
     </StyledBadges>
   );
 }
