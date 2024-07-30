@@ -1,5 +1,3 @@
-// import React from "react";
-// import PropTypes from "prop-types";
 import styled, { css } from "styled-components";
 
 const StyledButton = styled.button`
@@ -13,16 +11,21 @@ const StyledButton = styled.button`
   font-size: 16px;
   cursor: pointer;
 
-  /* Color variants */
+  /* Contained variants */
   ${({ primary }) =>
     primary &&
     css`
-      background: #fdff85;
-      color: #081026;
+      background: #655de9;
+      color: #eef2ff;
       border: none;
 
       &:hover {
-        background: #fbff4d;
+        background: #544be7;
+      }
+
+      &:focus {
+        background: #544be7;
+        outline: #eef2ff solid 1px;
       }
     `}
 
@@ -30,23 +33,63 @@ const StyledButton = styled.button`
     secondary &&
     css`
       background: #dde1ff;
-      color: #5b4cff;
+      color: #655de9;
       border: none;
 
       &:hover {
         background: #c6c6f9;
+        color: #544be7;
+      }
+    `} 
+
+  ${({ ternary }) =>
+    ternary &&
+    css`
+      background: #fef08a;
+      color: #655de9;
+      border: none;
+
+      &:hover {
+        background: #feec67;
+        color: #544be7;
       }
     `} 
     
+    /* Outlined variants */
+  ${({ primaryOutlined }) =>
+    primaryOutlined &&
+    css`
+      background: transparent;
+      color: #655de9;
+      border: 2px solid #655de9;
+
+      &:hover {
+        background: #eef2ff;
+      }
+    `}
+
+  ${({ secondaryOutlined }) =>
+    secondaryOutlined &&
+    css`
+      background: transparent;
+      color: #dde1ff;
+      border: 2px solid #dde1ff;
+
+      &:hover {
+        background: #dde1ff;
+        color: #5b4cff;
+      }
+    `}
+
     /* Size variants */
-    ${({ larg }) =>
+  ${({ larg }) =>
     larg &&
     css`
       height: 48px;
       padding: 12px 24px;
     `}
 
-        ${({ extraSmall }) =>
+      ${({ extraSmall }) =>
     extraSmall &&
     css`
       height: 36px;
@@ -55,13 +98,25 @@ const StyledButton = styled.button`
 `;
 
 // eslint-disable-next-line react/prop-types
-function Button({ children, primary, secondary, larg, extraSmall }) {
+function Button({
+  children,
+  primary,
+  secondary,
+  ternary,
+  primaryOutlined,
+  larg,
+  extraSmall,
+  secondaryOutlined,
+}) {
   return (
     <StyledButton
       primary={primary}
       secondary={secondary}
+      ternary={ternary}
       larg={larg}
       extraSmall={extraSmall}
+      primaryOutlined={primaryOutlined}
+      secondaryOutlined={secondaryOutlined}
     >
       {children}
     </StyledButton>
