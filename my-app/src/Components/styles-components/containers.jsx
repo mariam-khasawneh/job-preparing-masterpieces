@@ -24,7 +24,7 @@ export const Section = styled.div`
 export const Wrapper = styled.div`
   display: flex;
   padding: 64px;
-  border-radius: 16px;
+  /* border-radius: 16px; */
 
   @media screen and (min-width: 1024px) {
     padding: 64px 96px;
