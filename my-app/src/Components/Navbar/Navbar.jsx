@@ -12,11 +12,11 @@ function Navbar() {
             <Caption>Home</Caption>
           </NavLink>
         </li>
-        <li>
+        {/* <li>
           <NavLink to="/featuers" className={styles.navLink}>
             <Caption>Featuers</Caption>
           </NavLink>
-        </li>
+        </li> */}
         <li>
           <NavLink to="/courses" className={styles.navLink}>
             <Caption>Courses</Caption>
@@ -28,16 +28,6 @@ function Navbar() {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/resources" className={styles.navLink}>
-            <Caption>Resources</Caption>
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/how-It-work" className={styles.navLink}>
-            <Caption>How It Work</Caption>
-          </NavLink>
-        </li>
-        <li>
           <NavLink to="/contact" className={styles.navLink}>
             <Caption>Conatct</Caption>
           </NavLink>
@@ -45,6 +35,11 @@ function Navbar() {
         <li>
           <NavLink to="/pricing" className={styles.navLink}>
             <Caption>Pricing</Caption>
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/blog" className={styles.navLink}>
+            <Caption>Blog</Caption>
           </NavLink>
         </li>
       </ul>
