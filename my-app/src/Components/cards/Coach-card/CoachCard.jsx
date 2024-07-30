@@ -8,34 +8,40 @@ import { Link } from "react-router-dom";
 function CoachCard() {
   return (
     <>
-      <div className={styles.card}>
+      <div className="flex p-4 items-stretch gap-4 rounded-2xl border-slate-200 border-2 ">
         {/* <div className={styles.img}></div> */}
-        <div className={styles.contant}>
+        <div className="flex flex-col items-start gap-6 w-full">
           <div className="flex gap-4 justify-center	">
             <div className={styles.img}></div>
             <div className="flex flex-col self-stretch gap-1  justify-center">
-              <div className={styles.nameAndRole}>
-                <Body className={styles.coachName}>Coach Name</Body>
-                <Caption className={styles.coachRole}>Product Manager</Caption>
+              <div className="flex flex-col gap-0">
+                <Body className="font-semibold text-slate-700">Coach Name</Body>
+                <Caption className="text-slate-500 font-medium">
+                  Product Manager
+                </Caption>
               </div>
             </div>
           </div>
           <div>
             <div className=" flex gap-3">
-              <div className="flex flex-row gap-2">
+              <div className="flex flex-row gap-2 place-content-center">
                 <RatingSvg />
-                <Caption className={styles.ratingCaption}>4.0 rating</Caption>
+                <Caption className="text-slate-500 font-medium ">
+                  4.0 rating
+                </Caption>
               </div>
               <div className="flex flex-row gap-2">
                 <SessionSvg />
-                <Caption className={styles.ratingCaption}>50 session</Caption>
+                <Caption className="text-slate-500 font-medium ">
+                  50 session
+                </Caption>
               </div>
             </div>
             <Body>rrrrrrrrrrrrrrrrrrrrrrr</Body>
           </div>
-          <Link to="/coach-profile" className={styles.btnLink}>
-            <Button primary extraSmall className={styles.sessionBtn}>
-              Book Session
+          <Link to="/coach-profile" className="w-full">
+            <Button primary extraSmall className="w-full">
+              View Profile
             </Button>
           </Link>
         </div>

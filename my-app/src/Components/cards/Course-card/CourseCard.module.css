@@ -12,7 +12,7 @@
 .courseImg {
   align-self: stretch;
   border-radius: 8px;
-  background: url(./imgs/interviews.jpg) lightgray 50% / cover no-repeat;
+  background: url(./imgs/interviews.jpg) 50% / cover no-repeat;
   height: 200px;
 }
 
@@ -48,12 +48,13 @@
   display: flex;
   align-items: center;
   gap: 4px;
+  font-weight: 600;
 }
 
 .caption,
 .courseDescription {
   color: #596a95;
-  font-weight: 400;
+  font-weight: 500;
   line-height: normal;
   letter-spacing: -0.14px;
 }

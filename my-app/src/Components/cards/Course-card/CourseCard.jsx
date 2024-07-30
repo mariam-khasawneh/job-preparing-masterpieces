@@ -30,7 +30,7 @@ function CourseCard() {
           </Caption>
         </div>
         <Link to="/course" className={styles.btnLink}>
-          <Button secondary extraSmall className={styles.courseBtn}>
+          <Button primary extraSmall className={styles.courseBtn}>
             Start Learning
           </Button>
         </Link>
