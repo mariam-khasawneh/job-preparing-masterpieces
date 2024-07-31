@@ -4,6 +4,7 @@ import {
 } from "../../../Components/Typography-components/Typography";
 import Button from "../../../Components/Button/Button";
 import avatar from "../../../Images/coach.jpg";
+import { Link } from "react-router-dom";
 function InfoCard() {
   return (
     <div className="flex flex-col p-8 items-start gap-5 rounded-2xl border-2	 border-slate-200  ">
@@ -18,9 +19,11 @@ function InfoCard() {
       </div>
       <div className="grid grid-cols-4 md:grid-cols-5 gap-2">
         <div className="col-span-3 md:col-span-4">
-          <Button secondary larg className="">
-            Book a Session
-          </Button>
+          <Link to="/appointment" className="w-full">
+            <Button secondary larg className="">
+              Book a Session
+            </Button>
+          </Link>
         </div>
         <div className="col-span-1">
           <Button primary larg>
