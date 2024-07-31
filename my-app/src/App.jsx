@@ -19,7 +19,7 @@ import Article from "./Pages/Blog/Article";
 // ===================================
 // Dashboard
 import DashboardHome from "./Dashboard/Pages/Home";
-import Layout from "./Dashboard/Components/Layout";
+import DashLayout from "./Dashboard/Components/DashLayout";
 import Members from "./Dashboard/Pages/Members";
 
 // ===================================
@@ -46,7 +46,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
 
           {/* Dashboard */}
-          <Route path="dashboard" element={<Layout />}>
+          <Route path="dashboard" element={<DashLayout />}>
             <Route path="home" element={<DashboardHome />} />
             <Route path="members" element={<Members />} />
           </Route>
