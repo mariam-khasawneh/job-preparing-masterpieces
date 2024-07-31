@@ -15,6 +15,7 @@ import Course from "./Pages/Course/Course";
 import CoachProfile from "./Pages/CoachProfile/CoachProfile";
 import Blog from "./Pages/Blog/Blog";
 import Article from "./Pages/Blog/Article";
+import Appointment from "./Pages/Appointment/Appointment";
 
 // ===================================
 // Dashboard
@@ -43,6 +44,7 @@ function App() {
           <Route path="coach-profile" element={<CoachProfile />} />
           <Route path="blog" element={<Blog />} />
           <Route path="article" element={<Article />} />
+          <Route path="appointment" element={<Appointment />} />
           <Route path="*" element={<NotFound />} />
 
           {/* Dashboard */}
