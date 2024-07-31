@@ -3,7 +3,6 @@ import styled, { css } from "styled-components";
 export const Section = styled.div`
   display: flex;
   padding: 64px 96px;
-  background-color: #f7fbfb;
   font-family: Inter;
   height: calc(100vbh - 69px);
 
