@@ -7,29 +7,49 @@ import {
 } from "../../../Components/Typography-components/Typography";
 
 function EducatinCard() {
+  const education = [
+    {
+      university: "The University of Sydney",
+      credential: "BA (Hons) Business Management (Human Resource Management)",
+      startDate: "May 2003",
+      endDate: "Aug 2007",
+    },
+    {
+      university: "Harvard University",
+      credential: "Master of Business Administration (MBA)",
+      startDate: "Sep 2008",
+      endDate: "May 2010",
+    },
+    {
+      university: "Stanford University",
+      credential: "Bachelor of Science in Computer Science",
+      startDate: "Sep 2011",
+      endDate: "Jun 2015",
+    },
+  ];
+
   return (
     <div className="flex flex-col p-8 items-start gap-6 rounded-2xl border-2	 border-slate-200  ">
       <H6 className="font-semibold text-slate-900 leading-5	">
         Educational Background
       </H6>
       <div className=" flex flex-col gap-7 w-full ">
-        <CredentialRow />
-        <CredentialRow />
-        <CredentialRow />
-        <CredentialRow />
+        {education.map((props, key) => (
+          <CredentialRow key={key} {...props} />
+        ))}
       </div>
     </div>
   );
 }
 
-function CredentialRow() {
+function CredentialRow({ university, credential, startDate, endDate }) {
   return (
     <div className=" flex flex-row gap-8 w-full self-stretch border-b pb-3">
       <div className="rounded-full bg-slate-200 w-14 h-14"></div>
       <div id="content" className=" flex flex-col gap-1 w-full">
         <div className="flex flex-col md:flex-row justify-between">
           <SmallBody className="font-semibold text-slate-700">
-            The University of Sydney
+            {university}
           </SmallBody>
           <Link>
             <div className="flex flex-row gap-2">
@@ -59,10 +79,10 @@ function CredentialRow() {
             </div>
           </Link>
         </div>
+        <Caption className="text-slate-500">{credential}</Caption>
         <Caption className="text-slate-500">
-          BA (Hons) Business Management (Human Resource Management)
+          {startDate} - {endDate}
         </Caption>
-        <Caption className="text-slate-500">May 2003 - Aug 2007 </Caption>
       </div>
     </div>
   );

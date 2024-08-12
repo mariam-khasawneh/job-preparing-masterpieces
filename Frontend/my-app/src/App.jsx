@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 // ===================================
 import { Home } from "./Pages/Homepage/Home";
 import Featuers from "./Pages/Featuers/Featuers";
@@ -17,6 +18,8 @@ import Blog from "./Pages/Blog/Blog";
 import Article from "./Pages/Blog/Article";
 import Appointment from "./Pages/Appointment/Appointment";
 import Footer from "./Components/Footer/Footer";
+import VideoChat from "./Pages/Video/videoChat";
+import ScheduleMeeting from "./Pages/ScheduleMeeting/ScheduleMeeting";
 
 // ===================================
 // Dashboard
@@ -29,7 +32,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <Navbar />
+        {/* <Navbar /> */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="home" element={<Home />} />
@@ -46,6 +49,8 @@ function App() {
           <Route path="blog" element={<Blog />} />
           <Route path="article" element={<Article />} />
           <Route path="appointment" element={<Appointment />} />
+          <Route path="videoChat" element={<VideoChat />} />
+          <Route path="ScheduleMeeting" element={<ScheduleMeeting />} />
           <Route path="*" element={<NotFound />} />
 
           {/* Dashboard */}

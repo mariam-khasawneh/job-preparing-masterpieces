@@ -5,34 +5,55 @@ import {
 } from "../../../Components/Typography-components/Typography";
 import { Link } from "react-router-dom";
 function CoursesCard() {
+  const courses = [
+    {
+      name: "Mastering Resume Writing",
+      lessons: "8 lessons",
+      price: "35.00 JOD",
+    },
+    {
+      name: "Building Professional LinkedIn Profiles",
+      lessons: "6 lessons",
+      price: "30.00 JOD",
+    },
+    {
+      name: "Effective Networking Strategies",
+      lessons: "7 lessons",
+      price: "30.00 JOD",
+    },
+    {
+      name: "Personal Branding for Job Seekers",
+      lessons: "9 lessons",
+      price: "50.00 JOD",
+    },
+  ];
+
   return (
     <div className="flex flex-col p-8 items-start gap-6 rounded-2xl border-2	 border-slate-200  ">
       <H6 className="font-semibold text-slate-900 leading-5	">Courses</H6>
       <div className=" flex flex-col gap-7 w-full ">
-        <CourseRow />
-        <CourseRow />
-        <CourseRow />
+        {courses.map((props, key) => (
+          <CourseRow key={key} {...props} />
+        ))}
       </div>
     </div>
   );
 }
 
-function CourseRow() {
+function CourseRow({ name, lessons, price }) {
   return (
-    <div className="flex flex-row justify-between border-b pb-3">
-      <div>
-        <SmallBody className="font-semibold text-slate-700">
-          Course Name
-        </SmallBody>
+    <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 sm:gap-6 border-b pb-3">
+      <div className="sm:col-span-2">
+        <SmallBody className="font-semibold text-slate-700">{name}</SmallBody>
       </div>
       <div>
-        <Caption className="text-slate-500 font-medium">10 Lessons</Caption>
+        <Caption className="text-slate-500 font-medium">{lessons}</Caption>
       </div>
       <div>
-        <Caption className="text-slate-500 font-semibold">100$</Caption>
+        <Caption className="text-slate-500 font-semibold">{price}</Caption>
       </div>
       <Link>
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-row gap-2 justify-end">
           <Caption className="font-semibold text-indigo-600">
             View Course
           </Caption>

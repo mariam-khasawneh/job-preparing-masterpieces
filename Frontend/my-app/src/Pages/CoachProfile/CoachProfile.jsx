@@ -4,6 +4,7 @@ import AboutmeCard from "./Components/AboutmeCard";
 import SkillsCard from "./Components/SkillsCard";
 import EducatinCard from "./Components/EducatinCard";
 import CoursesCard from "./Components/CoursesCard";
+import ServicesCard from "./Components/ServicesCard";
 
 function CoachProfile() {
   return (
@@ -17,6 +18,7 @@ function CoachProfile() {
         <div id="left" className="lg:col-span-8 flex flex-col gap-6">
           <EducatinCard />
           <CoursesCard />
+          <ServicesCard />
         </div>
       </div>
     </Section>
