@@ -12,6 +12,7 @@ connectDB();
 // Require Routes
 const userRoutes = require("./Routes/userRoutes");
 const authRoutes = require("./Routes/authRoutes.js");
+const coachRequestRoutes = require("./Routes/coachRequestRoutes.js");
 
 // Use environment variables
 const port = process.env.PORT;
@@ -29,6 +30,7 @@ app.use(cookieParser()); // Add this line to use cookie-parser
 // Use Routes
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/coach-request", coachRequestRoutes);
 
 // Main Routes
 app.get("/", (req, res) => {
