@@ -29,39 +29,45 @@ import DashLayout from "./Dashboard/Components/DashLayout";
 import Members from "./Dashboard/Pages/Members";
 
 // ===================================
+// Context
+import { AuthProvider } from "./Context/AuthContext";
+// ===================================
+
 function App() {
   return (
     <>
       <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="home" element={<Home />} />
-          <Route path="featuers" element={<Featuers />} />
-          <Route path="courses" element={<Courses />} />
-          <Route path="coaching" element={<Coaching />} />
-          <Route path="resources" element={<Resources />} />
-          <Route path="contact" element={<Contact />} />
-          <Route path="pricing" element={<Pricing />} />
-          <Route path="signup" element={<SignUp />} />
-          <Route path="signup2" element={<SignUp2 />} />
-          <Route path="login" element={<Login />} />
-          <Route path="course" element={<Course />} />
-          <Route path="coach-profile" element={<CoachProfile />} />
-          <Route path="blog" element={<Blog />} />
-          <Route path="article" element={<Article />} />
-          <Route path="appointment" element={<Appointment />} />
-          <Route path="videoChat" element={<VideoChat />} />
-          <Route path="ScheduleMeeting" element={<ScheduleMeeting />} />
-          <Route path="*" element={<NotFound />} />
+        <AuthProvider>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="home" element={<Home />} />
+            <Route path="featuers" element={<Featuers />} />
+            <Route path="courses" element={<Courses />} />
+            <Route path="coaching" element={<Coaching />} />
+            <Route path="resources" element={<Resources />} />
+            <Route path="contact" element={<Contact />} />
+            <Route path="pricing" element={<Pricing />} />
+            <Route path="signup" element={<SignUp />} />
+            <Route path="signup2" element={<SignUp2 />} />
+            <Route path="login" element={<Login />} />
+            <Route path="course" element={<Course />} />
+            <Route path="coach-profile" element={<CoachProfile />} />
+            <Route path="blog" element={<Blog />} />
+            <Route path="article" element={<Article />} />
+            <Route path="appointment" element={<Appointment />} />
+            <Route path="videoChat" element={<VideoChat />} />
+            <Route path="ScheduleMeeting" element={<ScheduleMeeting />} />
+            <Route path="*" element={<NotFound />} />
 
-          {/* Dashboard */}
-          <Route path="dashboard" element={<DashLayout />}>
-            <Route path="home" element={<DashboardHome />} />
-            <Route path="members" element={<Members />} />
-          </Route>
-        </Routes>
-        <Footer />
+            {/* Dashboard */}
+            <Route path="dashboard" element={<DashLayout />}>
+              <Route path="home" element={<DashboardHome />} />
+              <Route path="members" element={<Members />} />
+            </Route>
+          </Routes>
+          <Footer />
+        </AuthProvider>
       </BrowserRouter>
     </>
   );

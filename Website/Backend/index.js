@@ -11,7 +11,7 @@ connectDB();
 
 // Require Routes
 const userRoutes = require("./Routes/userRoutes");
-const registrationRoutes = require("./Routes/registrationRoutes.js");
+const authRoutes = require("./Routes/authRoutes.js");
 
 // Use environment variables
 const port = process.env.PORT;
@@ -28,7 +28,7 @@ app.use(cookieParser()); // Add this line to use cookie-parser
 
 // Use Routes
 app.use("/api/users", userRoutes);
-app.use("/api/auth", registrationRoutes);
+app.use("/api/auth", authRoutes);
 
 // Main Routes
 app.get("/", (req, res) => {

@@ -2,6 +2,7 @@ const { required } = require("joi");
 const User = require("../Models/userModel");
 const { registerSchema, loginSchema } = require("../Validators/userValidator");
 const { createToken } = require("../Utils/tokenUtils");
+const jwt = require("jsonwebtoken");
 
 exports.registerUser = async (req, res) => {
   try {
@@ -62,15 +63,20 @@ exports.loginUser = async (req, res) => {
     if (!isMatch)
       return res.status(400).json({ message: "Invalid credentials" });
 
-    // Create a token for the user
-    const token = createToken(user);
+    // // Create a token for the user
+    // const token = createToken(user);
+
+    // If login is successful:
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
 
     // Set token in cookie
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 3600000, // 1 hour
     });
 
     res.status(200).json({ message: "Login successful", token });
@@ -121,6 +127,33 @@ exports.checkEmailAvailability = async (req, res) => {
   } catch (error) {
     res.status(500).json({ available: false, message: "Server error" });
   }
+};
+
+exports.verifyToken = (req, res) => {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res
+      .status(401)
+      .json({ isValid: false, message: "No token provided" });
+  }
+
+  try {
+    // Verify the token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // If verification is successful, send a positive response
+    res.json({ isValid: true, userId: decoded.userId });
+  } catch (error) {
+    // If verification fails, send a negative response
+    res.status(401).json({ isValid: false, message: "Invalid token" });
+  }
+};
+
+exports.logout = (req, res) => {
+  // Clear the token cookie
+  res.clearCookie("token");
+  res.json({ message: "Logged out successfully" });
 };
 
 // reset password
