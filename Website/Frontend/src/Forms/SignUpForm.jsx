@@ -2,170 +2,210 @@ import { useState } from "react";
 import { emailValidation } from "../Validation/validation";
 import FormInput from "../Components/FormInput";
 import Button from "../Components/Button/Button";
-
-//icons
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+// icons
 import { MdEmail } from "react-icons/md";
 import { FaUserAlt } from "react-icons/fa";
 import { FaLock } from "react-icons/fa";
 import { AiOutlineEyeInvisible, AiFillEye } from "react-icons/ai";
 
-// import { BsFillShieldLockFill } from "react-icons/fa";
-
 function SignUpForm() {
-  const [fname, setFName] = useState("");
-  const [uname, setUName] = useState("");
-  const [email, setEmil] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState("");
+  const navigate = useNavigate();
 
-  const [error, setError] = useState({
-    name: "",
+  const [formData, setFormData] = useState({
+    full_name: "",
+    user_name: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [error, setError] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handelTogglePassword = () => {
-    setShowPassword((prev) => !prev);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setError((prev) => ({ ...prev, [name]: null }));
   };
 
-  const handleError = (err, field) => {
-    setError((prev) => ({ ...prev, [field]: err }));
-  };
-
-  const validate = async (e) => {
-    e.preventDefault();
-    let isValid = true;
-
-    if (!email) {
-      handleError("Please input email address", "email");
-      isValid = false;
-    } else if (!emailValidation(email).isValid) {
-      handleError("Please input a valid email", "email");
-      isValid = false;
-    }
-
-    if (fname?.length < 3) {
-      handleError("Please input fullname", "name");
-      isValid = false;
-    }
-
-    if (!password) {
-      handleError("Please input password", "password");
-      isValid = false;
-    } else if (password.length < 6) {
-      handleError("Min password length of 6", "password");
-    }
-
-    if (isValid) {
-      alert("sign up successfult=y");
+  const handleTogglePassword = (field) => {
+    if (field === "password") {
+      setShowPassword((prev) => !prev);
     } else {
-      alert(handleError);
+      setShowConfirmPassword((prev) => !prev);
+    }
+  };
+
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = {};
+
+    if (!emailValidation(formData.email).isValid) {
+      newErrors.email = "Please input a valid email";
+      isValid = false;
+    }
+
+    if (formData.full_name.length < 3) {
+      newErrors.full_name = "Full name must be at least 3 characters";
+      isValid = false;
+    }
+
+    if (formData.user_name.length < 3) {
+      newErrors.user_name = "Username must be at least 3 characters";
+      isValid = false;
+    }
+
+    if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+      isValid = false;
+    }
+
+    if (formData.confirmPassword.length < 1) {
+      newErrors.confirmPassword = "Please enter confirm password";
+      isValid = false;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+      isValid = false;
+    }
+
+    setError(newErrors);
+    return isValid;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    setIsLoading(true);
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/auth/signup",
+        {
+          full_name: formData.full_name,
+          user_name: formData.user_name,
+          email: formData.email,
+          password: formData.password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.data.token) {
+        console.log("Signup successful", response.data);
+        navigate("/home");
+      }
+    } catch (error) {
+      if (error.response && error.response.data) {
+        setError(error.response.data);
+      } else {
+        setError({ general: "An error occurred. Please try again." });
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <form onSubmit={validate} className=" p-10rounded-lg w-1/2">
+    <form onSubmit={handleSubmit} className="w-full">
       <div className="text-2xl font-bold text-primaryIndigo text-center py-4">
-        Creat an account
+        Create an account
       </div>
       <div className="flex flex-col gap-6">
         <FormInput
-          label={"Email Adress"}
-          placeholder={"myemailaddress@example.com"}
-          type={"email"}
-          value={email}
-          onChange={(text) => setEmil(text)}
-          required
-          validator={emailValidation}
-          name={"email"}
+          label="Email Address"
+          placeholder="myemailaddress@example.com"
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
           error={error.email}
-          resetError={() => handleError(null, "email")}
-          // leftIcon={<MdEmail className="text-slate-400" size={14} />}
+          leftIcon={<MdEmail className="text-slate-400" size={14} />}
         />
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <FormInput
-            label={"Full Name"}
-            placeholder={"Name"}
-            type={"text"}
-            value={fname}
-            onChange={(text) => setFName(text)}
-            required
-            name={"name"}
-            error={error.email}
-            resetError={() => handleError(null, "name")}
-            // leftIcon={<FaUserAlt className="text-slate-400" size={14} />}
+            label="Full Name"
+            placeholder="Full Name"
+            type="text"
+            name="full_name"
+            value={formData.full_name}
+            onChange={handleChange}
+            error={error.full_name}
+            leftIcon={<FaUserAlt className="text-slate-400" size={14} />}
           />
           <FormInput
-            label={"User Name"}
-            placeholder={"User name"}
-            type={"text"}
-            value={uname}
-            onChange={(text) => setFName(text)}
-            required
-            name={"email"}
-            error={error.email}
-            resetError={() => handleError(null, "name")}
-            // leftIcon={<FaUserAlt className="text-slate-400" size={14} />}
+            label="User Name"
+            placeholder="Username"
+            type="text"
+            name="user_name"
+            value={formData.user_name}
+            onChange={handleChange}
+            error={error.user_name}
+            leftIcon={<FaUserAlt className="text-slate-400" size={14} />}
           />
         </div>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <FormInput
-            label={"Password"}
-            placeholder={"Password"}
+            label="Password"
+            placeholder="Password"
             type={showPassword ? "text" : "password"}
-            value={password}
-            onChange={(text) => setPassword(text)}
-            required
-            name={"password"}
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
             error={error.password}
-            resetError={() => handleError(null, "password")}
-            // leftIcon={<FaLock className="text-slate-400" size={14} />}
+            leftIcon={<FaLock className="text-slate-400" size={14} />}
             rightIcon={
               showPassword ? (
                 <AiOutlineEyeInvisible
                   className="text-slate-400 cursor-pointer"
-                  onClick={handelTogglePassword}
+                  onClick={() => handleTogglePassword("password")}
                   size={20}
                 />
               ) : (
                 <AiFillEye
                   className="text-slate-400 cursor-pointer"
-                  onClick={handelTogglePassword}
+                  onClick={() => handleTogglePassword("password")}
                   size={20}
                 />
               )
             }
           />
           <FormInput
-            label={"Confirm Password"}
-            placeholder={"Password"}
-            type={showPassword ? "text" : "password"}
-            value={password}
-            onChange={(text) => setPassword(text)}
-            required
-            name={"password"}
-            error={error.password}
-            resetError={() => handleError(null, "password")}
-            // leftIcon={<FaLock className="text-slate-400" size={14} />}
+            label="Confirm Password"
+            placeholder="Password"
+            type={showConfirmPassword ? "text" : "password"}
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            error={error.confirmPassword}
+            leftIcon={<FaLock className="text-slate-400" size={14} />}
             rightIcon={
-              showPassword ? (
+              showConfirmPassword ? (
                 <AiOutlineEyeInvisible
                   className="text-slate-400 cursor-pointer"
-                  onClick={handelTogglePassword}
+                  onClick={() => handleTogglePassword("confirmPassword")}
                   size={20}
                 />
               ) : (
                 <AiFillEye
                   className="text-slate-400 cursor-pointer"
-                  onClick={handelTogglePassword}
+                  onClick={() => handleTogglePassword("confirmPassword")}
                   size={20}
                 />
               )
             }
           />
         </div>
-        <Button larg primary type="submit" onClick={""}>
-          Submit
+        {error.general && (
+          <div className="text-red-500 text-sm">{error.general}</div>
+        )}
+        <Button extraSmall primary type="submit" disabled={isLoading}>
+          {isLoading ? "Signing up..." : "Sign Up"}
         </Button>
       </div>
     </form>

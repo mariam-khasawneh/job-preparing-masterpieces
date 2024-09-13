@@ -1,8 +1,8 @@
 require("dotenv").config();
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
 const express = require("express");
-
 const app = express();
 
 // Connect to Database
@@ -12,8 +12,8 @@ connectDB();
 // Require Routes
 const userRoutes = require("./Routes/userRoutes");
 const registrationRoutes = require("./Routes/registrationRoutes.js");
+
 // Use environment variables
-require("dotenv").config();
 const port = process.env.PORT;
 
 // Middleware
@@ -21,12 +21,14 @@ app.use(express.json());
 app.use(
   cors({
     origin: "http://localhost:5173",
+    credentials: true,
   })
 );
+app.use(cookieParser()); // Add this line to use cookie-parser
 
 // Use Routes
 app.use("/api/users", userRoutes);
-app.use("/api/registration", registrationRoutes);
+app.use("/api/auth", registrationRoutes);
 
 // Main Routes
 app.get("/", (req, res) => {

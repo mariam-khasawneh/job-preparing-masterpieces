@@ -30,6 +30,14 @@ exports.registerUser = async (req, res) => {
     // Create a token for the user
     const token = createToken(user);
 
+    // Set token in cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
     res.status(201).json({ message: "User registered successfully", token });
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -54,7 +62,17 @@ exports.loginUser = async (req, res) => {
     if (!isMatch)
       return res.status(400).json({ message: "Invalid credentials" });
 
+    // Create a token for the user
     const token = createToken(user);
+
+    // Set token in cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
     res.status(200).json({ message: "Login successful", token });
   } catch (error) {
     res.status(400).json({ error: error.message });
