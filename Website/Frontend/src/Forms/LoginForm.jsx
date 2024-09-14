@@ -166,23 +166,21 @@
 // export default LoginForm;
 
 import { useState } from "react";
-import { emailValidation } from "../Validation/validation";
+import { useDispatch } from "react-redux";
+import { login } from "../Store/authSlice";
 import FormInput from "../Components/FormInput";
 import Button from "../Components/Button/Button";
 import Popup from "../Components/Popup";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../Context/AuthContext";
 
 // icons
-import { MdEmail } from "react-icons/md";
-import { FaUserAlt } from "react-icons/fa";
-import { FaLock } from "react-icons/fa";
+import { FaUserAlt, FaLock } from "react-icons/fa";
 import { AiOutlineEyeInvisible, AiFillEye } from "react-icons/ai";
 
 function LoginForm() {
   const navigate = useNavigate();
-  const { login } = useAuth(); // Use the login function from AuthContext
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     user_name_or_email: "",
@@ -207,12 +205,12 @@ function LoginForm() {
     let isValid = true;
     const newErrors = {};
 
-    if (!formData.user_name_or_email) {
+    if (!formData.user_name_or_email.trim()) {
       newErrors.user_name_or_email = "Username or email is required";
       isValid = false;
     }
 
-    if (formData.password.length < 1) {
+    if (!formData.password.trim()) {
       newErrors.password = "Password is required";
       isValid = false;
     }
@@ -245,21 +243,22 @@ function LoginForm() {
 
       if (response.data.token) {
         console.log("Login successful", response.data);
-        login(response.data.token); // Use the login function from AuthContext
+        dispatch(
+          login({ user: response.data.user /*, token: response.data.token*/ })
+        );
+        // localStorage.setItem("authToken", response.data.token);
         setPopup({
           show: true,
           message: "Login successful!",
           type: "success",
         });
-        navigate("/home");
+        setTimeout(() => {
+          navigate("/home");
+        }, 1500); // Delay navigation to show success message
       }
     } catch (error) {
       let errorMessage = "An error occurred. Please try again.";
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
+      if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       }
       setPopup({

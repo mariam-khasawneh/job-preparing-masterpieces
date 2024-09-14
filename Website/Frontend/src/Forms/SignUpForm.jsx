@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { login } from "../Store/authSlice";
 import { emailValidation } from "../Validation/validation";
 import FormInput from "../Components/FormInput";
 import Button from "../Components/Button/Button";
@@ -12,6 +14,7 @@ import { AiOutlineEyeInvisible, AiFillEye } from "react-icons/ai";
 
 function SignUpForm() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     full_name: "",
@@ -97,6 +100,10 @@ function SignUpForm() {
       );
 
       if (response.data.token) {
+        console.log("Login successful", response.data);
+        dispatch(
+          login({ user: response.data.user /*, token: response.data.token*/ })
+        );
         console.log("Signup successful", response.data);
         navigate("/home");
       }
