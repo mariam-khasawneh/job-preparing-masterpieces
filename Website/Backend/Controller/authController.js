@@ -154,18 +154,35 @@ exports.logout = (req, res) => {
   // Clear the token cookie
   res.clearCookie("token");
   res.json({ message: "Logged out successfully" });
+
+  // const googleLogoutUrl = `https://accounts.google.com/Logout`;
+  // res.redirect(googleLogoutUrl);
 };
 
 exports.googleCallback = (req, res) => {
-  const token = jwt.sign({ userId: req.user.id }, process.env.JWT_SECRET, {
-    expiresIn: "1h",
-  });
-  res.cookie("token", token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 3600000, // 1 hour
-  });
-  res.redirect("/");
+  try {
+    if (!req.user || !req.user.id) {
+      return res
+        .status(400)
+        .json({ message: "User information not available" });
+    }
+
+    const token = jwt.sign({ userId: req.user.id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 3600000, // 1 hour
+    });
+
+    res.redirect("/");
+  } catch (error) {
+    console.error("Error in Google callback:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
+
 // reset password

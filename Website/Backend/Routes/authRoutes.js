@@ -5,17 +5,20 @@ const passport = require("passport");
 
 const router = express.Router();
 
-// Google OAuth routes
+// Google OAuth route to start authentication
 router.get(
   "/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
-// Google OAuth callback route
+// Google OAuth callback route to handle the response from Google
 router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/login" }),
-  authController.googleCallback
+  (req, res) => {
+    // Call your controller after successful authentication
+    authController.googleCallback(req, res);
+  }
 );
 
 router.post("/signup", authController.registerUser);
