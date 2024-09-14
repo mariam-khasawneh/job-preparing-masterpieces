@@ -9,6 +9,10 @@ const app = express();
 const connectDB = require("./Config/db.js");
 connectDB();
 
+// Passport
+const passport = require("passport");
+require("./config/passport");
+
 // Require Routes
 const userRoutes = require("./Routes/userRoutes");
 const authRoutes = require("./Routes/authRoutes.js");
