@@ -40,7 +40,7 @@ function Navbar() {
         "http://localhost:3000/api/auth/logout",
         {},
         {
-          withCredentials: true, // Ensure cookies are sent with the request
+          withCredentials: true,
         }
       );
 
@@ -104,11 +104,18 @@ function Navbar() {
               </li>
             </>
           ) : (
-            <li>
-              <Button primary extraSmall onClick={handleLogout}>
-                <Caption>Logout</Caption>
-              </Button>
-            </li>
+            <>
+              <li>
+                <Link to="/user-profile">
+                  <div className="w-8 h-8 rounded-full bg-slate-400"></div>
+                </Link>
+              </li>
+              {/* <li>
+                <Button primary extraSmall onClick={handleLogout}>
+                  <Caption>Logout</Caption>
+                </Button>
+              </li> */}
+            </>
           )}
         </ul>
       </div>

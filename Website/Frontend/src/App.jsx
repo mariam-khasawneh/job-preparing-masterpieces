@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
 // ===================================
 import Appointment from "./Pages/Appointment";
@@ -21,6 +21,7 @@ import ScheduleMeeting from "./Pages/ScheduleMeeting";
 import SignUp2 from "./Pages/SignUp2";
 import SignUp from "./Pages/SignUp";
 import VideoChat from "./Pages/videoChat";
+import UserProfilePage from "./Pages/User Profile/UserProfilePage";
 
 // Dashboard
 import DashboardHome from "./Dashboard/Pages/Home";
@@ -31,36 +32,47 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        {/* <AuthProvider> */}
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="home" element={<Home />} />
-          <Route path="featuers" element={<Featuers />} />
-          <Route path="courses" element={<Courses />} />
-          <Route path="coaching" element={<Coaching />} />
-          <Route path="resources" element={<Resources />} />
-          <Route path="contact" element={<Contact />} />
-          <Route path="pricing" element={<Pricing />} />
-          <Route path="signup" element={<SignUp />} />
-          <Route path="signup2" element={<SignUp2 />} />
-          <Route path="login" element={<Login />} />
-          <Route path="course" element={<Course />} />
-          <Route path="coach-profile" element={<CoachProfile />} />
-          <Route path="blog" element={<Blog />} />
-          <Route path="article" element={<Article />} />
-          <Route path="appointment" element={<Appointment />} />
-          <Route path="videoChat" element={<VideoChat />} />
-          <Route path="ScheduleMeeting" element={<ScheduleMeeting />} />
-          <Route path="*" element={<NotFound />} />
-
-          <Route path="dashboard" element={<DashLayout />}>
-            <Route path="home" element={<DashboardHome />} />
-            <Route path="members" element={<Members />} />
-          </Route>
-        </Routes>
-        <Footer />
+        <Content />
       </BrowserRouter>
+    </>
+  );
+}
+
+function Content() {
+  const location = useLocation();
+  const isUserProfileRoute = location.pathname.startsWith("/user-profile");
+
+  return (
+    <>
+      {!isUserProfileRoute && <Navbar />}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="home" element={<Home />} />
+        <Route path="featuers" element={<Featuers />} />
+        <Route path="courses" element={<Courses />} />
+        <Route path="coaching" element={<Coaching />} />
+        <Route path="resources" element={<Resources />} />
+        <Route path="contact" element={<Contact />} />
+        <Route path="pricing" element={<Pricing />} />
+        <Route path="signup" element={<SignUp />} />
+        <Route path="signup2" element={<SignUp2 />} />
+        <Route path="login" element={<Login />} />
+        <Route path="course" element={<Course />} />
+        <Route path="coach-profile" element={<CoachProfile />} />
+        <Route path="blog" element={<Blog />} />
+        <Route path="article" element={<Article />} />
+        <Route path="appointment" element={<Appointment />} />
+        <Route path="videoChat" element={<VideoChat />} />
+        <Route path="ScheduleMeeting" element={<ScheduleMeeting />} />
+        <Route path="user-profile" element={<UserProfilePage />} />
+        <Route path="*" element={<NotFound />} />
+
+        <Route path="dashboard" element={<DashLayout />}>
+          <Route path="home" element={<DashboardHome />} />
+          <Route path="members" element={<Members />} />
+        </Route>
+      </Routes>
+      {!isUserProfileRoute && <Footer />}
     </>
   );
 }
