@@ -10,15 +10,24 @@ exports.newRequest = async (req, res) => {
   }
 
   try {
-    const { userId, cv, experience, educationalBackground, introductoryVideo } =
-      req.body;
+    const { userId, experience, educationalBackground } = req.body;
+
+    // Get the file paths of the uploaded CV and video
+    const cv = req.files["cv"] ? req.files["cv"][0].path : null;
+    const video = req.files["video"] ? req.files["video"][0].path : null;
+
+    if (!cv || !video) {
+      return res
+        .status(400)
+        .json({ error: "Both CV and video files are required." });
+    }
 
     const coachRequest = new CoachRequest({
       userId,
       cv,
+      video,
       experience,
-      educationalBackground,
-      introductoryVideo,
+      educationalBackground: JSON.parse(educationalBackground),
     });
 
     const savedRequest = await coachRequest.save();

@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
 // ===================================
+import { Toaster } from "react-hot-toast";
+
 import Appointment from "./Pages/Appointment";
 import Article from "./Pages/Article";
 import Blog from "./Pages/Blog";
@@ -17,6 +19,8 @@ import Navbar from "./Components/Navbar/Navbar";
 import NotFound from "./Pages/Errors/NotFound";
 import Pricing from "./Pages/Pricing";
 import Resources from "./Pages/Resources";
+import RecoverPassword from "./Pages/RecoverPassword";
+import ResetPassword from "./Pages/ResetPassword";
 import ScheduleMeeting from "./Pages/ScheduleMeeting";
 import SignUp2 from "./Pages/SignUp2";
 import SignUp from "./Pages/SignUp";
@@ -32,6 +36,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
+        <Toaster position="top-center" />
         <Content />
       </BrowserRouter>
     </>
@@ -52,6 +57,8 @@ function Content() {
         <Route path="courses" element={<Courses />} />
         <Route path="coaching" element={<Coaching />} />
         <Route path="resources" element={<Resources />} />
+        <Route path="recovery" element={<RecoverPassword />} />
+        <Route path="reset-password" element={<ResetPassword />} />
         <Route path="contact" element={<Contact />} />
         <Route path="pricing" element={<Pricing />} />
         <Route path="signup" element={<SignUp />} />

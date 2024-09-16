@@ -3,6 +3,8 @@ import Sidebar from "./Sidebar";
 import OverViewPage from "./OverViewPage";
 import SessionsPage from "./SessionsPage";
 import CoursesPage from "./CoursesPage";
+import Profile from "./Profile";
+import CoachRequestForm from "./CoachRequestForm";
 
 const UserProfilePage = () => {
   const [activePage, setActivePage] = useState("Overview");
@@ -18,6 +20,10 @@ const UserProfilePage = () => {
         return <SessionsPage />;
       case "Courses":
         return <CoursesPage />;
+      case "Profile":
+        return <Profile />;
+      case "CoachReq":
+        return <CoachRequestForm />;
       default:
         return <div>Page not found</div>;
     }

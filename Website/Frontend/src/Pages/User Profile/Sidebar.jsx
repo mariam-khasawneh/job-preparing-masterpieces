@@ -32,9 +32,11 @@ const Sidebar = ({
     <nav className="mt-8">
       <ul>
         {[
+          { name: "Profile", icon: <MessageSquare size={24} /> },
           { name: "Overview", icon: <Activity size={24} /> },
           { name: "Sessions", icon: <Users size={24} /> },
           { name: "Courses", icon: <MessageSquare size={24} /> },
+          { name: "CoachReq", icon: <MessageSquare size={24} /> },
         ].map((item) => (
           <li key={item.name} className="mb-2">
             <button
