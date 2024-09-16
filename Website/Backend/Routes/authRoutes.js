@@ -25,6 +25,8 @@ router.post("/signup", authController.registerUser);
 router.post("/login", authController.loginUser);
 router.get("/verify", authController.verifyToken);
 router.post("/logout", authController.logout);
+router.post("/recover-password", authController.initiatePasswordRecovery);
+router.post("/reset-password", authController.resetPassword);
 
 router.get(
   "/check-username/:username",

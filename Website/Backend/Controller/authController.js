@@ -3,6 +3,8 @@ const User = require("../Models/userModel");
 const { registerSchema, loginSchema } = require("../Validators/userValidator");
 const { createToken } = require("../Utils/tokenUtils");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
+const { sendEmail } = require("../Utils/emailUtils");
 
 exports.registerUser = async (req, res) => {
   try {
@@ -39,7 +41,13 @@ exports.registerUser = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(201).json({ message: "User registered successfully", token });
+    res
+      .status(201)
+      .json({
+        message: "User registered successfully",
+        username: user.user_name,
+        token,
+      });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -63,13 +71,8 @@ exports.loginUser = async (req, res) => {
     if (!isMatch)
       return res.status(400).json({ message: "Invalid credentials" });
 
-    // // Create a token for the user
-    // const token = createToken(user);
-
     // If login is successful:
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = createToken(user);
 
     // Set token in cookie
     res.cookie("token", token, {
@@ -79,7 +82,9 @@ exports.loginUser = async (req, res) => {
       maxAge: 3600000, // 1 hour
     });
 
-    res.status(200).json({ message: "Login successful", token });
+    res
+      .status(200)
+      .json({ message: "Login successful", username: user.user_name, token });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -181,6 +186,127 @@ exports.googleCallback = (req, res) => {
     res.redirect("/");
   } catch (error) {
     console.error("Error in Google callback:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// exports.initiatePasswordRecovery = async (req, res) => {
+//   try {
+//     const { user_name_or_email } = req.body;
+//     console.log("Received user_name_or_email:", user_name_or_email); // Debug the input
+
+//     // Find user by username or email
+//     const user = await User.findOne({
+//       $or: [{ email: email }, { user_name: user_name }],
+//     });
+
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     // Generate OTP
+//     const otp = crypto.randomBytes(3).toString("hex").toUpperCase();
+//     const otpExpiry = new Date(Date.now() + 15 * 60 * 1000); // OTP valid for 15 minutes
+
+//     // Save OTP to user
+//     user.otp = otp;
+//     user.otpExpiry = otpExpiry;
+//     await user.save();
+
+//     // Send email with OTP
+//     await sendEmail(
+//       user.email,
+//       "Your OTP Code",
+//       `Your OTP for password recovery is: ${otp}. This OTP will expire in 15 minutes.`
+//     );
+
+//     res.status(200).json({ message: "Recovery email sent successfully" });
+//   } catch (error) {
+//     console.error("Password recovery error:", error);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
+exports.initiatePasswordRecovery = async (req, res) => {
+  try {
+    // Destructure the request body to get user_name and email
+    const { user_name, email } = req.body;
+
+    // Debugging: log the request body to ensure it's correctly received
+    console.log("Request body:", req.body);
+    console.log("user_name:", user_name);
+    console.log("email:", email);
+
+    // Find user by username or email
+    const user = await User.findOne({
+      $or: [{ email: email }, { user_name: user_name }],
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Generate OTP
+    const otp = crypto.randomBytes(3).toString("hex").toUpperCase();
+    const otpExpiry = new Date(Date.now() + 15 * 60 * 1000); // OTP valid for 15 minutes
+
+    // Save OTP to user
+    user.otp = otp;
+    user.otpExpiry = otpExpiry;
+    await user.save();
+
+    // Send email with OTP
+    await sendEmail(
+      user.email,
+      "Your OTP Code",
+      `Your OTP for password recovery is: ${otp}. This OTP will expire in 15 minutes.`
+    );
+
+    res
+      .status(200)
+      .json({ success: true, message: "Recovery email sent successfully" });
+  } catch (error) {
+    console.error("Password recovery error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const { user_name_or_email, otp, new_password } = req.body;
+
+    // Check if user_name_or_email is provided
+    if (!user_name_or_email) {
+      return res.status(400).json({ message: "Username or email is required" });
+    }
+
+    // Determine if user_name_or_email is an email or username
+    const isEmail = user_name_or_email.includes("@");
+    const query = isEmail
+      ? { email: user_name_or_email }
+      : { user_name: user_name_or_email };
+
+    // Find user by either email or username
+    const user = await User.findOne(query);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if OTP is valid and not expired
+    if (user.otp !== otp || user.otpExpiry < new Date()) {
+      return res.status(400).json({ message: "Invalid or expired OTP" });
+    }
+
+    // Update password
+    user.password = new_password;
+    user.otp = undefined;
+    user.otpExpiry = undefined;
+    await user.save();
+
+    res.status(200).json({ message: "Password reset successfully" });
+  } catch (error) {
+    console.error("Password reset error:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
