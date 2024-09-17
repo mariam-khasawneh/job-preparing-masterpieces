@@ -58,6 +58,8 @@ function LoginForm() {
         );
 
         if (response.data.token) {
+          const { token } = response.data;
+          document.cookie = `token=${token}; path=/; max-age=${60 * 60 * 24}`;
           console.log("Login successful", response.data);
           dispatch(login({ user: response.data.user }));
 

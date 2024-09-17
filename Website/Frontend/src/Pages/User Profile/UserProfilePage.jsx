@@ -3,8 +3,9 @@ import Sidebar from "./Sidebar";
 import OverViewPage from "./OverViewPage";
 import SessionsPage from "./SessionsPage";
 import CoursesPage from "./CoursesPage";
-import Profile from "./Profile";
+import Account from "./Account";
 import CoachRequestForm from "./CoachRequestForm";
+import { House } from "lucide-react";
 
 const UserProfilePage = () => {
   const [activePage, setActivePage] = useState("Overview");
@@ -20,9 +21,9 @@ const UserProfilePage = () => {
         return <SessionsPage />;
       case "Courses":
         return <CoursesPage />;
-      case "Profile":
-        return <Profile />;
-      case "CoachReq":
+      case "Account":
+        return <Account />;
+      case "Coach Request":
         return <CoachRequestForm />;
       default:
         return <div>Page not found</div>;
@@ -30,18 +31,19 @@ const UserProfilePage = () => {
   };
 
   return (
-    <div className="flex h-screen ">
+    <div className="flex h-screen">
       <Sidebar
         setActivePage={setActivePage}
         activePage={activePage}
         isSidebarOpen={isSidebarOpen}
         toggleSidebar={toggleSidebar}
       />
-      <div className="flex-1 overflow-auto">
-        <header className="shadow-sm p-4">
+      <div className="flex-1 flex flex-col overflow-auto">
+        <header className="shadow-sm p-4 fixed top-0  w-full bg-primarybackground z-10 flex justify-between">
           <h1 className="text-2xl font-bold text-gray-800">{activePage}</h1>
+          <House />
         </header>
-        <main className="p-6">{renderActivePage()}</main>
+        <main className="pt-20 p-6 flex-1">{renderActivePage()}</main>
       </div>
     </div>
   );
