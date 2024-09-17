@@ -49,6 +49,54 @@ exports.getUser = async (req, res) => {
   }
 };
 
+exports.getUserProfile = async (req, res) => {
+  try {
+    // Access the user's ID from req.user
+    const userId = req.user.id;
+
+    // Use the userId to fetch the user's data from the database
+    const user = await User.findById(userId);
+
+    // If no user is found, return 404
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Remove sensitive data like password from the response
+    const { password, ...userData } = user.toObject(); // Convert to plain object
+
+    return res
+      .status(200)
+      .json({ message: "Profile fetched successfully", user: userData });
+  } catch (error) {
+    // Log the error and return a server error message
+    console.error("Error fetching user profile:", error);
+    return res.status(500).json({ message: "Failed to fetch profile", error });
+  }
+};
+
+exports.updateUserProfile = async (req, res) => {
+  console.log(req.user.id);
+
+  try {
+    const userId = req.user.id;
+    console.log("Attempting to update user with ID:", userId);
+
+    const user = await User.findById({ _id: userId });
+    console.log("User found:", user ? "Yes" : "No");
+
+    if (!user) {
+      console.log("User not found for ID:", userId);
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // ... rest of the function
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    return res.status(500).json({ message: "Failed to update profile", error });
+  }
+};
+
 exports.updateUser = async (req, res) => {
   const { username } = req.params;
   const updateData = req.body;

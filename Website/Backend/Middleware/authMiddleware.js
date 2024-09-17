@@ -9,7 +9,8 @@ const authenticateJWT = (req, res, next) => {
     return res.status(401).json({ error: "No token provided" });
   }
 
-  const token = authHeader.split(" ")[1]; // Extract token from "Bearer <token>"
+  const token =
+    req.cookies["token"] || (authHeader && authHeader.split(" ")[1]);
 
   if (!token) {
     return res.status(401).json({ error: "Token is missing" });
@@ -27,12 +28,4 @@ const authenticateJWT = (req, res, next) => {
   });
 };
 
-const localVariables = (req, res, next) => {
-  req.app.locals = {
-    OTP: null,
-    resetSession: false,
-  };
-  next();
-};
-
-module.exports = { authenticateJWT, localVariables };
+module.exports = { authenticateJWT };

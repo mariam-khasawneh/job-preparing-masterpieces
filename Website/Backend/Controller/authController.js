@@ -37,17 +37,14 @@ exports.registerUser = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: "Lax",
     });
 
-    res
-      .status(201)
-      .json({
-        message: "User registered successfully",
-        username: user.user_name,
-        token,
-      });
+    res.status(201).json({
+      message: "User registered successfully",
+      username: user.user_name,
+      token,
+    });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -75,12 +72,11 @@ exports.loginUser = async (req, res) => {
     const token = createToken(user);
 
     // Set token in cookie
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 3600000, // 1 hour
-    });
+    // res.cookie("token", token, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production",
+    //   sameSite: "Lax",
+    // });
 
     res
       .status(200)
