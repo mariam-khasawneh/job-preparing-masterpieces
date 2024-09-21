@@ -1,9 +1,10 @@
 require("dotenv").config();
+
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-
 const express = require("express");
 const app = express();
+const path = require("path");
 
 // Connect to Database
 const connectDB = require("./Config/db.js");
@@ -12,11 +13,6 @@ connectDB();
 // Passport
 const passport = require("passport");
 require("./config/passport");
-
-// Require Routes
-const userRoutes = require("./Routes/userRoutes");
-const authRoutes = require("./Routes/authRoutes.js");
-const coachRequestRoutes = require("./Routes/coachRequestRoutes.js");
 
 // Use environment variables
 const port = process.env.PORT;
@@ -30,6 +26,12 @@ app.use(
   })
 );
 app.use(cookieParser()); // Add this line to use cookie-parser
+app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // Serve static files from the 'uploads' directory
+
+// Require Routes
+const userRoutes = require("./Routes/userRoutes");
+const authRoutes = require("./Routes/authRoutes.js");
+const coachRequestRoutes = require("./Routes/coachRequestRoutes.js");
 
 // Use Routes
 app.use("/api/users", userRoutes);
