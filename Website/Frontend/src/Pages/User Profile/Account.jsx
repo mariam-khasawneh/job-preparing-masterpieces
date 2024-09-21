@@ -1,132 +1,11 @@
-// import React, { useState, useEffect } from "react";
-// import FormInput from "../../Components/FormInput";
-// import { User, Camera } from "lucide-react";
-
-// const UserProfile = ({ user, onUpdateProfile }) => {
-//   const [profile, setProfile] = useState({
-//     full_name: "",
-//     user_name: "",
-//     email: "",
-//     bio: "",
-//     profilePicture: "",
-//   });
-//   const [errors, setErrors] = useState({});
-
-//   useEffect(() => {
-//     if (user) {
-//       setProfile({
-//         full_name: user.full_name || "",
-//         user_name: user.user_name || "",
-//         email: user.email || "",
-//         bio: user.bio || "",
-//         profilePicture: user.profilePicture || "",
-//       });
-//     }
-//   }, [user]);
-
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setProfile((prevProfile) => ({
-//       ...prevProfile,
-//       [name]: value,
-//     }));
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     // Here you would typically validate the form and call the onUpdateProfile function
-//     // For this example, we'll just log the profile data
-//     console.log("Updated profile:", profile);
-//     if (onUpdateProfile) {
-//       onUpdateProfile(profile);
-//     }
-//   };
-
-//   return (
-//     <div className="max-w-2xl mx-auto p-4">
-//       <h1 className="text-2xl font-bold mb-4">User Profile</h1>
-//       <form onSubmit={handleSubmit} className="space-y-4">
-//         <div className="flex items-center space-x-4 mb-4">
-//           <div className="w-24 h-24 bg-gray-200 rounded-full overflow-hidden">
-//             {profile.profilePicture ? (
-//               <img
-//                 src={profile.profilePicture}
-//                 alt="Profile"
-//                 className="w-full h-full object-cover"
-//               />
-//             ) : (
-//               <div className="w-full h-full flex items-center justify-center">
-//                 <User size={48} className="text-gray-400" />
-//               </div>
-//             )}
-//           </div>
-//           <button
-//             type="button"
-//             className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-//           >
-//             <Camera size={20} className="mr-2" />
-//             Change Photo
-//           </button>
-//         </div>
-
-//         <FormInput
-//           label="Full Name"
-//           name="full_name"
-//           type="text"
-//           placeholder="Enter your full name"
-//           value={profile.full_name}
-//           onChange={handleChange}
-//           error={errors.full_name}
-//         />
-
-//         <FormInput
-//           label="User_name"
-//           name="user_name"
-//           type="text"
-//           placeholder="Enter your user_name"
-//           value={profile.user_name}
-//           onChange={handleChange}
-//           error={errors.user_name}
-//         />
-
-//         <FormInput
-//           label="Email"
-//           name="email"
-//           type="email"
-//           placeholder="Enter your email"
-//           value={profile.email}
-//           onChange={handleChange}
-//           error={errors.email}
-//         />
-
-//         <FormInput
-//           label="Bio"
-//           name="bio"
-//           type="textarea"
-//           placeholder="Tell us about yourself"
-//           value={profile.bio}
-//           onChange={handleChange}
-//           error={errors.bio}
-//         />
-
-//         <button
-//           type="submit"
-//           className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700"
-//         >
-//           Save Changes
-//         </button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default UserProfile;
+// export default ProfileComponent;
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Edit2, User, Mail, FileText } from "lucide-react";
-import FormInput from "../../Components/FormInput"; // Ensure this path is correct
+import { Edit2, User, Mail, FileText, Camera } from "lucide-react";
+import FormInput from "../../Components/FormInput";
 import Cookies from "js-cookie";
 import Button from "../../Components/Button/Button";
+import ProfileImageCircle from "../../Components/ProfileImageCircle";
 
 const ProfileComponent = () => {
   const [userData, setUserData] = useState({
@@ -135,9 +14,11 @@ const ProfileComponent = () => {
     user_name: "",
     email: "",
     bio: "",
+    profilePicture: "",
   });
   const [isEditing, setIsEditing] = useState(false);
   const [errors, setErrors] = useState({});
+  const [newProfilePicture, setNewProfilePicture] = useState(null);
 
   useEffect(() => {
     fetchUserData();
@@ -145,13 +26,7 @@ const ProfileComponent = () => {
 
   const fetchUserData = async () => {
     try {
-      // Debugging: Check all cookies
-      console.log("Cookies:", document.cookie);
-
-      // Retrieve the token from cookies
       const token = Cookies.get("token");
-      console.log("Retrieved token:", token);
-
       if (!token) {
         throw new Error("No token found in cookies");
       }
@@ -160,12 +35,11 @@ const ProfileComponent = () => {
         "http://localhost:3000/api/users/profile",
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Include the token in headers
+            Authorization: `Bearer ${token}`,
           },
-          withCredentials: true, // Include credentials if using cookies
+          withCredentials: true,
         }
       );
-      console.log(response.data);
       setUserData(response.data.user);
     } catch (error) {
       console.error(
@@ -177,6 +51,10 @@ const ProfileComponent = () => {
 
   const handleInputChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
+  };
+
+  const handleFileChange = (e) => {
+    setNewProfilePicture(e.target.files[0]);
   };
 
   const validateForm = () => {
@@ -193,18 +71,39 @@ const ProfileComponent = () => {
     e.preventDefault();
     if (!validateForm()) return;
     try {
-      await axios.put("http://localhost:3000/api/users/profile", userData, {
-        withCredentials: true, // Include credentials (cookies) with the request
+      const formData = new FormData();
+      formData.append("full_name", userData.full_name);
+      formData.append("user_name", userData.user_name);
+      formData.append("email", userData.email);
+      formData.append("bio", userData.bio);
+      if (newProfilePicture) {
+        formData.append("profilePicture", newProfilePicture);
+      }
+
+      const token = Cookies.get("token");
+      await axios.put("http://localhost:3000/api/users/profile", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
       });
       setIsEditing(false);
+      fetchUserData(); // Refresh user data after update
     } catch (error) {
       console.error("Error updating user data:", error);
     }
   };
 
+  const getProfilePictureUrl = (profilePicture) => {
+    if (!profilePicture) return "/api/placeholder/100/100";
+    if (profilePicture.startsWith("http")) return profilePicture;
+    return `http://localhost:3000${profilePicture}`;
+  };
+
   return (
     <div className="max-w-2xl mx-auto p-4">
-      <div className=" py-5 flex justify-between items-center border-b border-gray-200">
+      <div className="py-5 flex justify-between items-center border-b border-gray-200">
         <div>
           <h1 className="text-2xl font-bold mb-2">My Account Settings</h1>
         </div>
@@ -213,11 +112,11 @@ const ProfileComponent = () => {
         </button>
       </div>
       <div className="">
-        <div className="flex items-center mb-6">
-          <img
-            src={userData.profilePicture || "/api/placeholder/100/100"}
-            alt="Profile"
-            className="rounded-full w-24 h-24 mr-4"
+        <div className="flex items-end my-6">
+          <ProfileImageCircle
+            fullName={userData.full_name}
+            isEditing={isEditing}
+            handleFileChange={handleFileChange}
           />
           <div>
             <h3 className="text-xl font-semibold text-gray-900">
@@ -226,7 +125,6 @@ const ProfileComponent = () => {
             <p className="text-gray-600">{userData.role}</p>
           </div>
         </div>
-
         <form onSubmit={handleSubmit} className="space-y-4">
           <FormInput
             label="Full Name"
@@ -285,7 +183,7 @@ const ProfileComponent = () => {
               Save Changes
             </Button>
           )}
-        </form>
+        </form>{" "}
       </div>
     </div>
   );

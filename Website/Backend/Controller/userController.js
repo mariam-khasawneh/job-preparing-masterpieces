@@ -76,13 +76,13 @@ exports.getUserProfile = async (req, res) => {
 };
 
 exports.updateUserProfile = async (req, res) => {
-  console.log(req.user.id);
+  console.log("User ID from request:", req.user.id);
 
   try {
     const userId = req.user.id;
     console.log("Attempting to update user with ID:", userId);
 
-    const user = await User.findById({ _id: userId });
+    const user = await User.findById(userId);
     console.log("User found:", user ? "Yes" : "No");
 
     if (!user) {
@@ -90,10 +90,52 @@ exports.updateUserProfile = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // ... rest of the function
+    // Fields that can be updated
+    const updatableFields = [
+      "full_name",
+      "user_name",
+      "email",
+      "profilePicture",
+      "bio",
+    ];
+
+    // Update user data
+    updatableFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        user[field] = req.body[field];
+      }
+    });
+
+    // Special handling for password update
+    if (req.body.password) {
+      user.password = req.body.password;
+      // The password will be hashed automatically due to the pre-save hook
+    }
+
+    // Save the updated user
+    await user.save();
+
+    // Remove sensitive information before sending the response
+    const updatedUser = user.toObject();
+    delete updatedUser.password;
+    delete updatedUser.otp;
+    delete updatedUser.otpExpiry;
+
+    console.log("User profile updated successfully");
+    return res
+      .status(200)
+      .json({ message: "Profile updated successfully", user: updatedUser });
   } catch (error) {
     console.error("Error updating profile:", error);
-    return res.status(500).json({ message: "Failed to update profile", error });
+    if (error.code === 11000) {
+      // MongoDB duplicate key error
+      return res
+        .status(400)
+        .json({ message: "Username or email already exists" });
+    }
+    return res
+      .status(500)
+      .json({ message: "Failed to update profile", error: error.message });
   }
 };
 
