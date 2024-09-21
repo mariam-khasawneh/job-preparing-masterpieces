@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { login } from "../Store/authSlice";
+import { login } from "../Store/Slices/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import FormInput from "../Components/FormInput";
@@ -11,6 +11,7 @@ import { FaUserAlt, FaLock } from "react-icons/fa";
 import { AiOutlineEyeInvisible, AiFillEye } from "react-icons/ai";
 import { Section } from "../Components/styles-components/containers";
 import { toast } from "react-hot-toast";
+import Cookies from "js-cookie";
 
 function Login() {
   return (
@@ -59,7 +60,10 @@ function LoginForm() {
 
         if (response.data.token) {
           const { token } = response.data;
-          document.cookie = `token=${token}; path=/; max-age=${60 * 60 * 24}`;
+          Cookies.set("token", token, {
+            expires: 7,
+            secure: true,
+          });
           console.log("Login successful", response.data);
           dispatch(login({ user: response.data.user }));
 

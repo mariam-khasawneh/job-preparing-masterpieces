@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { logout } from "../Store/authSlice";
+import { logout } from "../Store/Slices/authSlice";
 import toast from "react-hot-toast";
 
 const useLogout = () => {

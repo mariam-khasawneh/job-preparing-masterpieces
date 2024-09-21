@@ -1,7 +1,7 @@
 const express = require("express");
 const coachRequestController = require("../Controller/coachRequestController");
 const router = express.Router();
-const upload = require("../Config/multer");
+const upload = require("../Middleware/multer");
 
 router.post(
   "/new",

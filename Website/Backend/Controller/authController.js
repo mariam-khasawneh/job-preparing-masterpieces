@@ -33,13 +33,6 @@ exports.registerUser = async (req, res) => {
     // Create a token for the user
     const token = createToken(user);
 
-    // Set token in cookie
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Lax",
-    });
-
     res.status(201).json({
       message: "User registered successfully",
       username: user.user_name,
