@@ -26,7 +26,8 @@ import SignUp2 from "./Pages/SignUp2";
 import SignUp from "./Pages/SignUp";
 import VideoChat from "./Pages/videoChat";
 import UserProfilePage from "./Pages/User Profile/UserProfilePage";
-
+import ProtectedRoute from "./Components/ProtectedRoute";
+import ProtectedComponent from "./Pages/ProtectedComponent";
 // Dashboard
 import DashboardHome from "./Dashboard/Pages/Home";
 import DashLayout from "./Dashboard/Components/DashLayout";
@@ -46,11 +47,11 @@ function App() {
 function Content() {
   const location = useLocation();
   const isUserProfileRoute = location.pathname.startsWith("/user-profile");
-
   return (
     <>
       {!isUserProfileRoute && <Navbar />}
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="home" element={<Home />} />
         <Route path="featuers" element={<Featuers />} />
@@ -74,6 +75,17 @@ function Content() {
         <Route path="user-profile" element={<UserProfilePage />} />
         <Route path="*" element={<NotFound />} />
 
+        {/* Protected Routes */}
+        <Route
+          path="/protected"
+          element={
+            <ProtectedRoute>
+              <ProtectedComponent />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Dashboard */}
         <Route path="dashboard" element={<DashLayout />}>
           <Route path="home" element={<DashboardHome />} />
           <Route path="members" element={<Members />} />

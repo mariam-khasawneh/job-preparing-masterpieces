@@ -95,12 +95,6 @@ const ProfileComponent = () => {
     }
   };
 
-  const getProfilePictureUrl = (profilePicture) => {
-    if (!profilePicture) return "/api/placeholder/100/100";
-    if (profilePicture.startsWith("http")) return profilePicture;
-    return `http://localhost:3000${profilePicture}`;
-  };
-
   return (
     <div className="max-w-2xl mx-auto p-4">
       <div className="py-5 flex justify-between items-center border-b border-gray-200">

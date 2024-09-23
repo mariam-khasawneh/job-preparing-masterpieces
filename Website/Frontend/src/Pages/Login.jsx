@@ -12,6 +12,7 @@ import { AiOutlineEyeInvisible, AiFillEye } from "react-icons/ai";
 import { Section } from "../Components/styles-components/containers";
 import { toast } from "react-hot-toast";
 import Cookies from "js-cookie";
+import { loginUser } from "../Store/Thunks/authThunks";
 
 function Login() {
   return (
@@ -29,7 +30,6 @@ function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Formik setup
   const formik = useFormik({
     initialValues: {
       user_name_or_email: "",
@@ -44,53 +44,37 @@ function LoginForm() {
     onSubmit: async (values) => {
       setIsLoading(true);
       try {
-        const response = await axios.post(
-          "http://localhost:3000/api/auth/login",
-          {
-            user_name: values.user_name_or_email.includes("@")
-              ? undefined
-              : values.user_name_or_email,
-            email: values.user_name_or_email.includes("@")
-              ? values.user_name_or_email
-              : undefined,
-            password: values.password,
-          },
-          { withCredentials: true }
-        );
+        const loginData = {
+          user_name: values.user_name_or_email.includes("@")
+            ? undefined
+            : values.user_name_or_email,
+          email: values.user_name_or_email.includes("@")
+            ? values.user_name_or_email
+            : undefined,
+          password: values.password,
+        };
 
-        if (response.data.token) {
-          const { token } = response.data;
-          Cookies.set("token", token, {
-            expires: 7,
-            secure: true,
-          });
-          console.log("Login successful", response.data);
-          dispatch(login({ user: response.data.user }));
+        const resultAction = await dispatch(loginUser(loginData));
 
-          // Show success toast
+        if (loginUser.fulfilled.match(resultAction)) {
+          // Login was successful
           toast.success("Login successful!");
-
           setTimeout(() => {
             navigate("/home");
           }, 1500);
+        } else if (loginUser.rejected.match(resultAction)) {
+          // Login failed
+          const error = resultAction.payload;
+          let errorMessage = "An error occurred. Please try again.";
+
+          if (error && error.message) {
+            errorMessage = error.message;
+          }
+
+          toast.error(errorMessage);
         }
       } catch (error) {
-        let errorMessage = "An error occurred. Please try again.";
-
-        // Check for specific error responses
-        if (error.response) {
-          const status = error.response.status;
-          const serverMessage = error.response.data.message;
-
-          if (status === 400) {
-            errorMessage = "Incorrect User or Password ";
-          } else if (serverMessage) {
-            errorMessage = serverMessage;
-          }
-        }
-
-        // Show error toast with specific message
-        toast.error(errorMessage);
+        toast.error("An unexpected error occurred.");
       } finally {
         setIsLoading(false);
       }

@@ -2,9 +2,11 @@ const multer = require("multer");
 const path = require("path");
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  estination: function (req, file, cb) {
     cb(null, "uploads/"); // Make sure this folder exists
   },
+
+  //Naming uploaded files
   filename: function (req, file, cb) {
     cb(
       null,
