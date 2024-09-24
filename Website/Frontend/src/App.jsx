@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-
-// ===================================
 import { Toaster } from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+// ===================================
 
 import Appointment from "./Pages/Appointment";
 import Article from "./Pages/Article";
@@ -28,6 +29,11 @@ import VideoChat from "./Pages/videoChat";
 import UserProfilePage from "./Pages/User Profile/UserProfilePage";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import ProtectedComponent from "./Pages/ProtectedComponent";
+
+// ===============================
+
+import { checkAuthState } from "./Store/Slices/authSlice";
+
 // Dashboard
 import DashboardHome from "./Dashboard/Pages/Home";
 import DashLayout from "./Dashboard/Components/DashLayout";
@@ -38,10 +44,20 @@ function App() {
     <>
       <BrowserRouter>
         <Toaster position="top-center" />
-        <Content />
+        <AuthWrapper />{" "}
       </BrowserRouter>
     </>
   );
+}
+
+function AuthWrapper() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(checkAuthState());
+  }, [dispatch]);
+
+  return <Content />;
 }
 
 function Content() {
@@ -72,7 +88,6 @@ function Content() {
         <Route path="appointment" element={<Appointment />} />
         <Route path="videoChat" element={<VideoChat />} />
         <Route path="ScheduleMeeting" element={<ScheduleMeeting />} />
-        <Route path="user-profile" element={<UserProfilePage />} />
         <Route path="*" element={<NotFound />} />
 
         {/* Protected Routes */}
@@ -81,6 +96,15 @@ function Content() {
           element={
             <ProtectedRoute>
               <ProtectedComponent />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="user-profile"
+          element={
+            <ProtectedRoute>
+              {" "}
+              <UserProfilePage />
             </ProtectedRoute>
           }
         />

@@ -1,58 +1,125 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import FormInput from "../../Components/FormInput";
-import { Upload, BookOpen, Video } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import Button from "../../Components/Button/Button";
+import axios from "axios";
+import { storage } from "../../Firebase/firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { checkAuthState } from "../../Store/Slices/authSlice";
+import Cookies from "js-cookie";
+import { toast } from "react-hot-toast";
+// import ProgressBar from "react-progressbar.js";
+// import Circle from "react-progressbar.js/lib/circle";
 
-const CoachRequestForm = ({ userId }) => {
+const CoachRequestForm = () => {
+  const dispatch = useDispatch();
+  const { isLoggedIn, token } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({
     experience: "",
     educationalBackground: [
       { university: "", credential: "", major: "", period: "" },
     ],
   });
+  const [user, setUser] = useState({
+    _id: " ",
+  });
   const [cvFile, setCvFile] = useState(null);
   const [videoFile, setVideoFile] = useState(null);
   const [errors, setErrors] = useState({});
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+  useEffect(() => {
+    fetchUserData();
+  }, []);
 
-  const handleFileChange = (e) => {
-    const { name, files } = e.target;
-    if (name === "cv") {
-      setCvFile(files[0]);
-    } else if (name === "video") {
-      setVideoFile(files[0]);
+  const fetchUserData = async () => {
+    try {
+      const token = Cookies.get("token");
+      if (!token) {
+        throw new Error("No token found in cookies");
+      }
+
+      const response = await axios.get(
+        "http://localhost:3000/api/users/profile",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+      setUser(response.data.user);
+    } catch (error) {
+      console.error(
+        "Error fetching user data:",
+        error.response ? error.response.data : error.message
+      );
     }
   };
 
-  const handleEducationChange = (index, e) => {
+  useEffect(() => {
+    dispatch(checkAuthState());
+  }, [dispatch]);
+
+  // Add this useEffect to log authentication state changes
+  useEffect(() => {
+    console.log("Auth state:", { isLoggedIn, user: user?.id, token });
+  }, [isLoggedIn, user, token]);
+
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleFileChange = (e, fileType) => {
+    const file = e.target.files[0];
+    console.log(`Selected ${fileType}:`, file);
+    if (fileType === "cv") {
+      setCvFile(file);
+    } else if (fileType === "video") {
+      setVideoFile(file);
+    }
+  };
+
+  const handleEducationChange = (index, field, value) => {
     const newEducation = [...formData.educationalBackground];
-    newEducation[index] = { ...newEducation[index], [name]: value };
-    setFormData((prevData) => ({
-      ...prevData,
-      educationalBackground: newEducation,
-    }));
+    newEducation[index][field] = value;
+    setFormData({ ...formData, educationalBackground: newEducation });
   };
 
   const addEducation = () => {
-    setFormData((prevData) => ({
-      ...prevData,
+    setFormData({
+      ...formData,
       educationalBackground: [
-        ...prevData.educationalBackground,
+        ...formData.educationalBackground,
         { university: "", credential: "", major: "", period: "" },
       ],
-    }));
+    });
+  };
+
+  const removeEducation = (index) => {
+    const newEducation = [...formData.educationalBackground];
+    newEducation.splice(index, 1);
+    setFormData({ ...formData, educationalBackground: newEducation });
+  };
+
+  const uploadFile = async (file, path) => {
+    const storageRef = ref(storage, path);
+    console.log(`Uploading file to: ${path}`);
+    await uploadBytes(storageRef, file);
+    const downloadUrl = await getDownloadURL(storageRef);
+    console.log(`File uploaded. Download URL: ${downloadUrl}`);
+    return await getDownloadURL(storageRef);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!isLoggedIn) {
+      setErrors({ submit: "User is not authenticated. Please log in." });
+      return;
+    }
+
     // Basic validation
     const newErrors = {};
     if (!cvFile) newErrors.cv = "CV is required";
@@ -65,331 +132,168 @@ const CoachRequestForm = ({ userId }) => {
     }
 
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append("userId", userId);
-      formDataToSend.append("cv", cvFile);
-      formDataToSend.append("video", videoFile);
-      formDataToSend.append("experience", formData.experience);
-      formDataToSend.append(
-        "educationalBackground",
-        JSON.stringify(formData.educationalBackground)
+      // Upload files to Firebase Storage
+      const cvUrl = await uploadFile(cvFile, `${user._id}/cv/${cvFile.name}`);
+      const videoUrl = await uploadFile(
+        videoFile,
+        `${user._id}/video/${videoFile.name}`
       );
 
-      const response = await fetch(
+      // Prepare data to send to your API
+      const dataToSend = {
+        userId: user._id,
+        cv: cvUrl,
+        introductoryVideo: videoUrl,
+        experience: formData.experience,
+        educationalBackground: formData.educationalBackground,
+      };
+
+      // Send data to your API
+      const response = await axios.post(
         "http://localhost:3000/api/coach-request/new",
+        dataToSend,
         {
-          method: "POST",
-          body: formDataToSend,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to submit request");
+      if (response.data.success) {
+        console.log("Request submitted successfully:", response.data);
+        toast.success("Your coach request has been submitted successfully.");
+        // Handle success (e.g., show a success message, redirect)
+      } else {
+        setErrors({ submit: response.data.error });
       }
-
-      const result = await response.json();
-      console.log("Request submitted successfully:", result);
-      // Handle success (e.g., show a success message, redirect)
     } catch (error) {
       console.error("Error submitting request:", error);
       setErrors({ submit: "Failed to submit request. Please try again." });
     }
   };
+  if (!isLoggedIn) {
+    return (
+      <div className="max-w-2xl mx-auto p-4">
+        <h1 className="text-2xl font-bold mb-4">Coach Request Form</h1>
+        <p className="text-red-500">Please log in to submit a coach request.</p>
+        {/* Add a login button or link to your login page here */}
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-2xl mx-auto p-4">
-      <div className=" py-5  flex justify-between items-center border-b border-gray-200">
+      <div className="py-5 flex justify-between items-center border-b border-gray-200">
         <h1 className="text-2xl font-bold mb-2">Coach Request Form</h1>
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">
-            CV Upload (PDF only)
-          </label>
+        <div>
+          <label className="block mb-2">Upload CV (PDF)</label>
           <input
             type="file"
-            name="cv"
             accept=".pdf"
-            onChange={handleFileChange}
-            className="mt-1 block w-full text-sm text-gray-500
-                      file:mr-4 file:py-2 file:px-4
-                      file:rounded-full file:border-0
-                      file:text-sm file:font-semibold
-                      file:bg-indigo-50 file:text-indigo-600
-                      hover:file:bg-indigo-100"
+            onChange={(e) => handleFileChange(e, "cv")}
+            className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"
           />
-          {errors.cv && (
-            <p className="mt-1 text-sm text-red-500">{errors.cv}</p>
-          )}
+          {errors.cv && <p className="text-red-500">{errors.cv}</p>}
         </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">
-            Introductory Video Upload (MP4 only)
-          </label>
+        <div>
+          <label className="block mb-2">Upload Introductory Video</label>
           <input
             type="file"
-            name="video"
-            accept="video/mp4"
-            onChange={handleFileChange}
-            className="mt-1 block w-full text-sm text-gray-500
-                      file:mr-4 file:py-2 file:px-4
-                      file:rounded-full file:border-0
-                      file:text-sm file:font-semibold
-                      file:bg-indigo-50 file:text-indigo-600
-                      hover:file:bg-indigo-100"
+            accept="video/*"
+            onChange={(e) => handleFileChange(e, "video")}
+            className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"
           />
-          {errors.video && (
-            <p className="mt-1 text-sm text-red-500">{errors.video}</p>
+          {errors.video && <p className="text-red-500">{errors.video}</p>}
+        </div>
+
+        <div>
+          <FormInput
+            label="Experience"
+            name="experience"
+            type="textarea"
+            placeholder="Describe your coaching experience"
+            value={formData.experience}
+            onChange={handleInputChange}
+            error={errors.experience}
+            leftIcon={<BookOpen size={20} />}
+          />
+          {errors.experience && (
+            <p className="text-red-500">{errors.experience}</p>
           )}
         </div>
 
-        <FormInput
-          label="Experience"
-          name="experience"
-          type="textarea"
-          placeholder="Describe your coaching experience"
-          value={formData.experience}
-          onChange={handleChange}
-          error={errors.experience}
-          leftIcon={<BookOpen size={20} />}
-        />
-
         <div className="mb-4">
-          <h2 className="text-lg font-semibold mb-2">Educational Background</h2>
+          <h3 className="text-lg font-semibold mb-2">Educational Background</h3>
           {formData.educationalBackground.map((edu, index) => (
             <div key={index} className="mb-4 p-4 border rounded">
               <FormInput
                 label="University"
-                name="university"
-                type="text"
-                placeholder="Enter university name"
                 value={edu.university}
-                onChange={(e) => handleEducationChange(index, e)}
-                error={errors[`education${index}University`]}
+                onChange={(e) =>
+                  handleEducationChange(index, "university", e.target.value)
+                }
               />
               <FormInput
                 label="Credential"
-                name="credential"
-                type="text"
-                placeholder="Enter credential"
                 value={edu.credential}
-                onChange={(e) => handleEducationChange(index, e)}
-                error={errors[`education${index}Credential`]}
+                onChange={(e) =>
+                  handleEducationChange(index, "credential", e.target.value)
+                }
               />
               <FormInput
                 label="Major"
-                name="major"
-                type="text"
-                placeholder="Enter major"
                 value={edu.major}
-                onChange={(e) => handleEducationChange(index, e)}
-                error={errors[`education${index}Major`]}
+                onChange={(e) =>
+                  handleEducationChange(index, "major", e.target.value)
+                }
               />
               <FormInput
                 label="Period"
-                name="period"
-                type="text"
-                placeholder="Enter study period (e.g., 2010-2014)"
                 value={edu.period}
-                onChange={(e) => handleEducationChange(index, e)}
-                error={errors[`education${index}Period`]}
+                onChange={(e) =>
+                  handleEducationChange(index, "period", e.target.value)
+                }
               />
+              {index > 0 && (
+                <Button
+                  secondary={true}
+                  extraSmall={true}
+                  onClick={() => removeEducation(index)}
+                  variant="danger"
+                  className="mt-2"
+                >
+                  Remove
+                </Button>
+              )}
             </div>
           ))}
-          <Button extraSmall secondary type="button" onClick={addEducation}>
+          <Button
+            primaryOutlined={true}
+            extraSmall={true}
+            onClick={addEducation}
+            variant="secondary"
+            className="mt-2"
+          >
             Add Education
           </Button>
         </div>
 
-        {errors.submit && <p className="text-red-500">{errors.submit}</p>}
-        <Button type="submit" extraSmall primary>
-          Submit Coach Request
+        <Button
+          primary={true}
+          extraSmall={true}
+          type="submit"
+          className="w-full"
+        >
+          Submit Request
         </Button>
+
+        {errors.submit && <p className="text-red-500">{errors.submit}</p>}
       </form>
     </div>
   );
 };
 
 export default CoachRequestForm;
-// import React, { useState } from "react";
-// import FormInput from "../../Components/FormInput"; // Assuming FormInput is in the same directory
-// import { Upload, BookOpen, Video } from "lucide-react";
-// import Button from "../../Components/Button/Button";
-
-// const CoachRequestForm = ({ userId }) => {
-//   const [formData, setFormData] = useState({
-//     cv: "",
-//     experience: "",
-//     introductoryVideo: "",
-//     educationalBackground: [
-//       { university: "", credential: "", major: "", period: "" },
-//     ],
-//   });
-//   const [errors, setErrors] = useState({});
-
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData((prevData) => ({
-//       ...prevData,
-//       [name]: value,
-//     }));
-//   };
-
-//   const handleEducationChange = (index, e) => {
-//     const { name, value } = e.target;
-//     const newEducation = [...formData.educationalBackground];
-//     newEducation[index] = { ...newEducation[index], [name]: value };
-//     setFormData((prevData) => ({
-//       ...prevData,
-//       educationalBackground: newEducation,
-//     }));
-//   };
-
-//   const addEducation = () => {
-//     setFormData((prevData) => ({
-//       ...prevData,
-//       educationalBackground: [
-//         ...prevData.educationalBackground,
-//         { university: "", credential: "", major: "", period: "" },
-//       ],
-//     }));
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     // Basic validation
-//     const newErrors = {};
-//     if (!formData.cv) newErrors.cv = "CV is required";
-//     if (!formData.experience) newErrors.experience = "Experience is required";
-//     if (!formData.introductoryVideo)
-//       newErrors.introductoryVideo = "Introductory video is required";
-
-//     if (Object.keys(newErrors).length > 0) {
-//       setErrors(newErrors);
-//       return;
-//     }
-
-//     try {
-//       const response = await fetch(
-//         "http://localhost:3000/api/coach-request/new",
-//         {
-//           method: "POST",
-//           headers: {
-//             "Content-Type": "application/json",
-//           },
-//           body: JSON.stringify({
-//             userId,
-//             ...formData,
-//           }),
-//         }
-//       );
-
-//       if (!response.ok) {
-//         throw new Error("Failed to submit request");
-//       }
-
-//       const result = await response.json();
-//       console.log("Request submitted successfully:", result);
-//       // Handle success (e.g., show a success message, redirect)
-//     } catch (error) {
-//       console.error("Error submitting request:", error);
-//       setErrors({ submit: "Failed to submit request. Please try again." });
-//     }
-//   };
-
-//   return (
-//     <div className="max-w-2xl mx-auto p-4">
-//       <h1 className="text-2xl font-bold mb-4">Coach Request Form</h1>
-//       <form onSubmit={handleSubmit} className="space-y-4">
-//         <FormInput
-//           label="CV Upload"
-//           name="cv"
-//           type="text"
-//           placeholder="Enter CV file URL"
-//           value={formData.cv}
-//           onChange={handleChange}
-//           error={errors.cv}
-//           leftIcon={<Upload size={20} />}
-//         />
-
-//         <FormInput
-//           label="Experience"
-//           name="experience"
-//           type="textarea"
-//           placeholder="Describe your coaching experience"
-//           value={formData.experience}
-//           onChange={handleChange}
-//           error={errors.experience}
-//           leftIcon={<BookOpen className="text-slate-400" size={14} />}
-//         />
-
-//         <FormInput
-//           label="Introductory Video"
-//           name="introductoryVideo"
-//           type="text"
-//           placeholder="Enter video URL"
-//           value={formData.introductoryVideo}
-//           onChange={handleChange}
-//           error={errors.introductoryVideo}
-//           leftIcon={<Video className="text-slate-400" size={14} />}
-//         />
-
-//         <div className="mb-4">
-//           <h2 className="text-lg font-semibold mb-2">Educational Background</h2>
-//           {formData.educationalBackground.map((edu, index) => (
-//             <div key={index} className="mb-4 p-4 border rounded">
-//               <FormInput
-//                 label="University"
-//                 name="university"
-//                 type="text"
-//                 placeholder="Enter university name"
-//                 value={edu.university}
-//                 onChange={(e) => handleEducationChange(index, e)}
-//                 error={errors[`education${index}University`]}
-//               />
-//               <FormInput
-//                 label="Credential"
-//                 name="credential"
-//                 type="text"
-//                 placeholder="Enter credential"
-//                 value={edu.credential}
-//                 onChange={(e) => handleEducationChange(index, e)}
-//                 error={errors[`education${index}Credential`]}
-//               />
-//               <FormInput
-//                 label="Major"
-//                 name="major"
-//                 type="text"
-//                 placeholder="Enter major"
-//                 value={edu.major}
-//                 onChange={(e) => handleEducationChange(index, e)}
-//                 error={errors[`education${index}Major`]}
-//               />
-//               <FormInput
-//                 label="Period"
-//                 name="period"
-//                 type="text"
-//                 placeholder="Enter study period (e.g., 2010-2014)"
-//                 value={edu.period}
-//                 onChange={(e) => handleEducationChange(index, e)}
-//                 error={errors[`education${index}Period`]}
-//               />
-//             </div>
-//           ))}
-//           <Button extraSmall secondary type="button" onClick={addEducation}>
-//             Add Education
-//           </Button>
-//         </div>
-
-//         {errors.submit && <p className="text-red-500">{errors.submit}</p>}
-
-//         <Button type="submit" extraSmall primary>
-//           Submit Coach Request
-//         </Button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default CoachRequestForm;

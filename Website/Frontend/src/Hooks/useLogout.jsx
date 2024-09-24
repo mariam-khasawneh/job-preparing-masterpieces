@@ -1,8 +1,8 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { logout } from "../Store/Slices/authSlice";
 import toast from "react-hot-toast";
+import { logoutUser } from "../Store/Thunks/authThunks";
 
 const useLogout = () => {
   const dispatch = useDispatch();
@@ -18,10 +18,7 @@ const useLogout = () => {
       );
 
       // Dispatch logout action
-      dispatch(logout());
-
-      // Clear local state
-      localStorage.removeItem("authState");
+      dispatch(logoutUser());
 
       // Redirect to login page
       navigate("/login");

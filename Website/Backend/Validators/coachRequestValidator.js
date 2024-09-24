@@ -17,7 +17,7 @@ const coachRequestSchema = Joi.object({
   requestDate: Joi.date().default(Date.now),
   reviewDate: Joi.date().allow(null),
   comments: Joi.string().allow(""),
-  cv: Joi.string().required(), // Assuming cv is a URL
+  cv: Joi.string(), //.required(), // Assuming cv is a URL
   experience: Joi.string().required(),
   educationalBackground: Joi.array()
     .items(educationalBackgroundSchema)

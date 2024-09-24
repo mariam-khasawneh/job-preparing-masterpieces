@@ -1,27 +1,34 @@
-import { createSlice } from "@reduxjs/toolkit";
 import { registerUser, loginUser, logoutUser } from "../Thunks/authThunks";
 import Cookies from "js-cookie";
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
+  isLoggedIn: false,
+  user: null,
+  token: null,
+  status: "idle",
+  error: null,
+};
 
 const authSlice = createSlice({
   name: "auth",
-  initialState: {
-    isLoggedIn: false,
-    user: null,
-    token: null,
-    status: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
-    error: null,
-  },
+  initialState,
   reducers: {
     checkAuthState: (state) => {
       const token = Cookies.get("token");
-      state.isLoggedIn = !!token;
-      state.token = token || null;
+      console.log("Token from cookie:", token);
+      if (token) {
+        state.isLoggedIn = true;
+        state.token = token;
+      } else {
+        state.isLoggedIn = false;
+        state.token = null;
+        state.user = null;
+      }
+      console.log("isLoggedIn set to:", state.isLoggedIn);
     },
-    login: (state /* , action*/) => {
-      state.isLoggedIn = true;
-    },
-    logout: (state) => {
-      state.isLoggedIn = false;
+    setUser: (state, action) => {
+      state.user = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -32,11 +39,12 @@ const authSlice = createSlice({
       .addCase(registerUser.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.isLoggedIn = true;
-        state.user = action.payload.user;
+        state.user = action.payload;
         state.token = action.payload.token;
         Cookies.set("token", action.payload.token, {
           expires: 7,
           secure: true,
+          sameSite: "strict",
         });
         state.error = null;
       })
@@ -52,6 +60,11 @@ const authSlice = createSlice({
         state.isLoggedIn = true;
         state.user = action.payload.user;
         state.token = action.payload.token;
+        Cookies.set("token", action.payload.token, {
+          expires: 7,
+          secure: true,
+          sameSite: "strict",
+        });
         state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
@@ -59,14 +72,12 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(logoutUser.fulfilled, (state) => {
-        state.isLoggedIn = false;
-        state.user = null;
-        state.token = null;
-        state.status = "idle";
-        state.error = null;
+        Cookies.remove("token");
+        return { ...initialState };
       });
   },
 });
 
-export const { checkAuthState, login, logout } = authSlice.actions;
+// Only export the actions you need
+export const { checkAuthState, setUser } = authSlice.actions;
 export default authSlice.reducer;

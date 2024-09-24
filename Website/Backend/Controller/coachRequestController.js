@@ -1,40 +1,73 @@
 const CoachRequest = require("../Models/coachRequestModel");
-const coachRequestvalidation = require("../Validators/coachRequestValidator");
+const coachRequestValidation = require("../Validators/coachRequestValidator"); // Ensure this line is present
 const Coach = require("../Models/coachModel");
 
 // Create a new coach request
+
+// exports.newRequest = (req, res) => {
+//   // Log the request body and uploaded files for debugging
+//   console.log("Request Body:", req.body);
+//   console.log("Uploaded Files:", req.files); // Use req.files since we use upload.fields()
+
+//   // Validate the request body
+//   const { error } = coachRequestValidation.validate(req.body);
+//   if (error) {
+//     return res.status(400).json({ error: error.details[0].message });
+//   }
+
+//   // Extract the data
+//   const { userId, experience, educationalBackground, introductoryVideo } =
+//     req.body;
+
+//   // Access uploaded files
+//   const cvPath = req.files.cv ? req.files.cv[0].path : null; // Accessing the CV file path
+//   const videoPath = req.files.video ? req.files.video[0].path : null; // Accessing the video file path
+
+//   // Check if required files are present
+//   if (!cvPath) {
+//     return res.status(400).json({ error: "CV file is required." });
+//   }
+
+//   // Prepare the data to save in the database
+//   const newRequest = new CoachRequest({
+//     userId,
+//     experience,
+//     educationalBackground: JSON.parse(educationalBackground), // Ensure this is an array
+//     cv: cvPath,
+//     introductoryVideo: videoPath || introductoryVideo, // Use uploaded video if present
+//   });
+
+//   // Save to the database
+//   newRequest
+//     .save()
+//     .then(() =>
+//       res.status(201).json({ message: "Request created successfully!" })
+//     )
+//     .catch((err) =>
+//       res
+//         .status(500)
+//         .json({ error: "An error occurred while saving the request." })
+//     );
+// };
+
 exports.newRequest = async (req, res) => {
-  const { error } = coachRequestvalidation.validate(req.body);
-  if (error) {
-    return res.status(400).json({ error: error.details[0].message });
-  }
-
   try {
-    const { userId, experience, educationalBackground } = req.body;
+    const { userId, cv, introductoryVideo, experience, educationalBackground } =
+      req.body;
 
-    // Get the file paths of the uploaded CV and video
-    const cv = req.files["cv"] ? req.files["cv"][0].path : null;
-    const video = req.files["video"] ? req.files["video"][0].path : null;
-
-    if (!cv || !video) {
-      return res
-        .status(400)
-        .json({ error: "Both CV and video files are required." });
-    }
-
-    const coachRequest = new CoachRequest({
+    const newCoachRequest = new CoachRequest({
       userId,
       cv,
-      video,
+      introductoryVideo,
       experience,
-      educationalBackground: JSON.parse(educationalBackground),
+      educationalBackground,
     });
 
-    const savedRequest = await coachRequest.save();
+    await newCoachRequest.save();
 
-    res.status(201).json(savedRequest);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to create coach request." });
+    res.status(201).json({ success: true, data: newCoachRequest });
+  } catch (error) {
+    res.status(400).json({ success: false, error: error.message });
   }
 };
 
@@ -91,7 +124,6 @@ exports.reviewRequest = async (req, res) => {
     // Respond with the updated request
     res.status(200).json(updatedRequest);
   } catch (err) {
-    // Handle any errors that occur during the update
     console.error("Error saving new coach:", err);
     res.status(500).json({ error: "Failed to update coach request." });
   }

@@ -6,9 +6,12 @@ function ProtectedRoute({ children }) {
   const { isLoggedIn } = useSelector((state) => state.auth);
 
   if (!isLoggedIn) {
-    toast.custom(<div>Must Login</div>);
-    setTimeout(() => {}, 1500);
+    // Show a toast notification
+    toast.error("You must be logged in to access this page.", {
+      duration: 3000, // Toast duration in milliseconds
+    });
 
+    // Redirect to login
     return <Navigate to="/login" replace />;
   }
 
