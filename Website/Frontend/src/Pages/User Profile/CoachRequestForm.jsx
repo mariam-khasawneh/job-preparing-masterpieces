@@ -9,8 +9,6 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { checkAuthState } from "../../Store/Slices/authSlice";
 import Cookies from "js-cookie";
 import { toast } from "react-hot-toast";
-// import ProgressBar from "react-progressbar.js";
-// import Circle from "react-progressbar.js/lib/circle";
 
 const CoachRequestForm = () => {
   const dispatch = useDispatch();
@@ -61,7 +59,6 @@ const CoachRequestForm = () => {
     dispatch(checkAuthState());
   }, [dispatch]);
 
-  // Add this useEffect to log authentication state changes
   useEffect(() => {
     console.log("Auth state:", { isLoggedIn, user: user?.id, token });
   }, [isLoggedIn, user, token]);
@@ -109,7 +106,7 @@ const CoachRequestForm = () => {
     await uploadBytes(storageRef, file);
     const downloadUrl = await getDownloadURL(storageRef);
     console.log(`File uploaded. Download URL: ${downloadUrl}`);
-    return await getDownloadURL(storageRef);
+    return downloadUrl;
   };
 
   const handleSubmit = async (e) => {
@@ -131,7 +128,7 @@ const CoachRequestForm = () => {
       return;
     }
 
-    try {
+    const submitRequest = async () => {
       // Upload files to Firebase Storage
       const cvUrl = await uploadFile(cvFile, `${user._id}/cv/${cvFile.name}`);
       const videoUrl = await uploadFile(
@@ -161,16 +158,31 @@ const CoachRequestForm = () => {
 
       if (response.data.success) {
         console.log("Request submitted successfully:", response.data);
-        toast.success("Your coach request has been submitted successfully.");
-        // Handle success (e.g., show a success message, redirect)
+        return "Your coach request has been submitted successfully.";
       } else {
-        setErrors({ submit: response.data.error });
+        throw new Error(response.data.error || "Failed to submit request");
       }
-    } catch (error) {
-      console.error("Error submitting request:", error);
-      setErrors({ submit: "Failed to submit request. Please try again." });
-    }
+    };
+
+    toast.promise(
+      submitRequest(),
+      {
+        loading: "Submitting your request...",
+        success: (message) => message,
+        error: (err) => `Submission failed: ${err.message}`,
+      },
+      {
+        style: {
+          minWidth: "250px",
+        },
+        success: {
+          duration: 5000,
+          icon: "🎉",
+        },
+      }
+    );
   };
+
   if (!isLoggedIn) {
     return (
       <div className="max-w-2xl mx-auto p-4">
