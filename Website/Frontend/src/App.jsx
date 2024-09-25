@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 // ===================================
 
 import Appointment from "./Pages/Appointment";
@@ -33,6 +33,10 @@ import ProtectedComponent from "./Pages/ProtectedComponent";
 // ===============================
 
 import { checkAuthState } from "./Store/Slices/authSlice";
+
+// ========================
+
+import AdminCoachRequestsPage from "./Dashboard/Pages/AdminCoachRequestsPage";
 
 // Dashboard
 import DashboardHome from "./Dashboard/Pages/Home";
@@ -89,6 +93,10 @@ function Content() {
         <Route path="videoChat" element={<VideoChat />} />
         <Route path="ScheduleMeeting" element={<ScheduleMeeting />} />
         <Route path="*" element={<NotFound />} />
+        <Route
+          path="AdminCoachRequestsPage"
+          element={<AdminCoachRequestsPage />}
+        />
 
         {/* Protected Routes */}
         <Route
