@@ -21,7 +21,7 @@ const Sidebar = ({
 }) => (
   <div
     className={`bg-primaryIndigo text-white h-screen rounded-r-2xl px-2 ${
-      isSidebarOpen ? "w-64" : "w-20"
+      isSidebarOpen ? "w-56" : "w-20"
     } transition-all duration-300 ease-in-out`}
   >
     <div className="py-4 pl-2 flex justify-between items-center">
@@ -30,17 +30,17 @@ const Sidebar = ({
         onClick={toggleSidebar}
         className="p-2 hover:bg-custom-rgba rounded w-12 flex justify-center"
       >
-        {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+        {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
       </button>
     </div>
     <nav className="mt-8">
       <ul>
         {[
-          { name: "Overview", icon: <Activity size={24} /> },
-          { name: "Account", icon: <UserPen size={24} /> },
-          { name: "Sessions", icon: <Video size={24} /> },
-          { name: "Courses", icon: <Play size={24} /> },
-          { name: "Coach Request", icon: <UserPlus size={24} /> },
+          { name: "Overview", icon: <Activity size={20} /> },
+          { name: "Account", icon: <UserPen size={20} /> },
+          { name: "Sessions", icon: <Video size={20} /> },
+          { name: "Courses", icon: <Play size={20} /> },
+          { name: "Coach Request", icon: <UserPlus size={20} /> },
         ].map((item) => (
           <li key={item.name} className="mb-2">
             <button
