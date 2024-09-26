@@ -207,7 +207,7 @@ const CoachRequestForm = () => {
             onChange={(e) => handleFileChange(e, "cv")}
             className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"
           />
-          {errors.cv && <p className="text-red-500">{errors.cv}</p>}
+          {errors.cv && <p className="text-red-500 text-sm">{errors.cv}</p>}
         </div>
 
         <div>
@@ -218,7 +218,9 @@ const CoachRequestForm = () => {
             onChange={(e) => handleFileChange(e, "video")}
             className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"
           />
-          {errors.video && <p className="text-red-500">{errors.video}</p>}
+          {errors.video && (
+            <p className="text-red-500 text-sm">{errors.video}</p>
+          )}
         </div>
 
         <div>
@@ -232,9 +234,6 @@ const CoachRequestForm = () => {
             error={errors.experience}
             leftIcon={<BookOpen size={20} />}
           />
-          {errors.experience && (
-            <p className="text-red-500">{errors.experience}</p>
-          )}
         </div>
 
         <div className="mb-4">
