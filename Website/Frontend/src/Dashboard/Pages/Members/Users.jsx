@@ -176,7 +176,7 @@ const Users = () => {
           <CardTitle>User Management</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex justify-between mb-4">
+          <div className="flex gap-4 mb-4 items-center">
             <Input
               placeholder="Search users..."
               value={searchTerm}

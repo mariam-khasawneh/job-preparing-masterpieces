@@ -32,6 +32,8 @@ const coachSchema = new Schema(
       type: Date,
       default: Date.now, // Date when they were approved
     },
+    isDeleted: { type: Boolean, default: false },
+    isActivated: { type: Boolean, default: true },
   },
   { timestamps: true }
 );

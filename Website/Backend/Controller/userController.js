@@ -185,44 +185,6 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-// exports.toggleUserActivation = async (req, res) => {
-//   const { username } = req.params;
-
-//   if (!username) {
-//     return res.status(400).json({ message: "Invalid Username" });
-//   }
-
-//   try {
-//     // Find the user by username
-//     const user = await User.findOne({ user_name: username });
-
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-
-//     // Toggle the isActivated status
-//     user.isActivated = !user.isActivated;
-
-//     // Save the updated user
-//     await user.save();
-
-//     return res.status(200).json({
-//       message: `User activation status updated to ${
-//         user.isActivated ? "active" : "inactive"
-//       }`,
-//       user: {
-//         user_name: user.user_name,
-//         isActivated: user.isActivated,
-//       },
-//     });
-//   } catch (error) {
-//     console.error("Error toggling activation status:", error);
-//     return res.status(500).json({
-//       message: "Failed to update activation status",
-//       error: error.message,
-//     });
-//   }
-// };
 exports.toggleUserActivation = async (req, res) => {
   const { username } = req.params;
   console.log("Username received:", username); // Debugging
