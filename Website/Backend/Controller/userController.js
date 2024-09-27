@@ -7,15 +7,6 @@ const { OAuth2Client } = require("google-auth-library");
 const mongoose = require("mongoose");
 const JWT_SECRET = process.env.JWT_SECRET;
 
-exports.getAllUsers = async (req, res) => {
-  try {
-    const users = await User.find({ isDeleted: false });
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(500).json({ message: "Failed to retrieve users", error });
-  }
-};
-
 exports.getUsersCount = async (req, res) => {
   try {
     const count = await User.countDocuments({ isDeleted: false });
@@ -167,22 +158,103 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-exports.getActive = async (req, res) => {
+exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({ isActivated: true, isDeleted: false });
+    const { isActivated } = req.query;
+
+    let query = { isDeleted: false };
+
+    if (isActivated !== undefined) {
+      // Convert the string to a boolean and validate it
+      const isActive =
+        isActivated === "true" ? true : isActivated === "false" ? false : null;
+
+      if (isActive === null) {
+        return res
+          .status(400)
+          .json({ error: "Invalid status filter. Use 'true' or 'false'." });
+      }
+
+      query.isActivated = isActive;
+    }
+
+    const users = await User.find(query);
     res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ message: "Failed to retrieve active users", error });
+    res.status(500).json({ message: "Failed to retrieve users", error });
   }
 };
 
-exports.getInActive = async (req, res) => {
+// exports.toggleUserActivation = async (req, res) => {
+//   const { username } = req.params;
+
+//   if (!username) {
+//     return res.status(400).json({ message: "Invalid Username" });
+//   }
+
+//   try {
+//     // Find the user by username
+//     const user = await User.findOne({ user_name: username });
+
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     // Toggle the isActivated status
+//     user.isActivated = !user.isActivated;
+
+//     // Save the updated user
+//     await user.save();
+
+//     return res.status(200).json({
+//       message: `User activation status updated to ${
+//         user.isActivated ? "active" : "inactive"
+//       }`,
+//       user: {
+//         user_name: user.user_name,
+//         isActivated: user.isActivated,
+//       },
+//     });
+//   } catch (error) {
+//     console.error("Error toggling activation status:", error);
+//     return res.status(500).json({
+//       message: "Failed to update activation status",
+//       error: error.message,
+//     });
+//   }
+// };
+exports.toggleUserActivation = async (req, res) => {
+  const { username } = req.params;
+  console.log("Username received:", username); // Debugging
+  if (!username) {
+    return res.status(400).json({ message: "Invalid Username" });
+  }
+
   try {
-    const users = await User.find({ isActivated: false, isDeleted: false });
-    res.status(200).json(users);
+    const user = await User.findOne({ user_name: username });
+    console.log("User found:", user); // Debugging
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.isActivated = !user.isActivated;
+    await user.save();
+
+    return res.status(200).json({
+      message: `User activation status updated to ${
+        user.isActivated ? "active" : "inactive"
+      }`,
+      user: {
+        user_name: user.user_name,
+        isActivated: user.isActivated,
+      },
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Failed to retrieve inactive users", error });
+    console.error("Error toggling activation status:", error);
+    return res.status(500).json({
+      message: "Failed to update activation status",
+      error: error.message,
+    });
   }
 };

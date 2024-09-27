@@ -1,7 +1,7 @@
 const express = require("express");
 const userController = require("../Controller/userController");
 const { authenticateJWT } = require("../Middleware/authMiddleware");
-const { UserRefreshClient } = require("google-auth-library");
+const { toggleUserActivation } = require("../Controller/userController");
 
 const router = express.Router();
 
@@ -16,8 +16,6 @@ const upload = require("../Middleware/multer");
 router.get("/profile", authenticateJWT, userController.getUserProfile);
 router.get("/", userController.getAllUsers);
 router.get("/count", userController.getUsersCount);
-router.get("/inactive", userController.getInActive);
-router.get("/active", userController.getInActive);
 router.get("/:username", userController.getUser);
 
 // PUT Routes
@@ -28,5 +26,11 @@ router.put(
   userController.updateUserProfile
 );
 router.put("/:username", authenticateJWT, userController.updateUser);
+
+// PATCH Routes
+router.patch(
+  "/:username/toggle-activation",
+  userController.toggleUserActivation
+);
 
 module.exports = router;

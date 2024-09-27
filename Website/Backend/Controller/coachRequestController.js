@@ -1,6 +1,7 @@
 const CoachRequest = require("../Models/coachRequestModel");
 const coachRequestValidation = require("../Validators/coachRequestValidator"); // Ensure this line is present
 const Coach = require("../Models/coachModel");
+const User = require("../Models/userModel");
 
 // Get all coach requests, or filter by status
 exports.getAllRequests = async (req, res) => {
@@ -87,7 +88,7 @@ exports.reviewRequest = async (req, res) => {
       return res.status(404).json({ error: "Coach request not found." });
     }
 
-    // If status is "approved", create a new Coach entry
+    // If status is "approved", create a new Coach entry and update the user's role to "coach"
     if (status === "approved") {
       const {
         userId,
@@ -97,6 +98,7 @@ exports.reviewRequest = async (req, res) => {
         introductoryVideo,
       } = updatedRequest;
 
+      // Create new coach entry
       const newCoach = new Coach({
         userId,
         cv,
@@ -107,12 +109,15 @@ exports.reviewRequest = async (req, res) => {
       });
 
       await newCoach.save(); // Save the coach entry
+
+      // Update the user's role to "coach"
+      await User.findByIdAndUpdate(userId, { role: "coach" });
     }
 
     // Respond with the updated request
     res.status(200).json(updatedRequest);
   } catch (err) {
-    console.error("Error saving new coach:", err);
+    console.error("Error updating coach request:", err);
     res.status(500).json({ error: "Failed to update coach request." });
   }
 };

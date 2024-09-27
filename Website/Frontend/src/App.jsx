@@ -1,9 +1,15 @@
+// React ====================================================
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
-import { useDispatch } from "react-redux";
 import { useEffect } from "react";
-// ===================================
 
+// Redux ====================================================
+import { checkAuthState } from "./Store/Slices/authSlice";
+import { useDispatch } from "react-redux";
+
+// Extra Modules
+import { Toaster } from "react-hot-toast";
+
+// Pages  ====================================================
 import Appointment from "./Pages/Appointment";
 import Article from "./Pages/Article";
 import Blog from "./Pages/Blog";
@@ -30,18 +36,14 @@ import UserProfilePage from "./Pages/User Profile/UserProfilePage";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import ProtectedComponent from "./Pages/ProtectedComponent";
 
-// ===============================
-
-import { checkAuthState } from "./Store/Slices/authSlice";
-
-// ========================
-
-import AdminCoachRequestsPage from "./Dashboard/Pages/AdminCoachRequestsPage";
-
-// Dashboard
+// Dashboard ===============================
 import DashboardHome from "./Dashboard/Pages/Home";
 import DashLayout from "./Dashboard/Components/DashLayout";
 import Members from "./Dashboard/Pages/Members";
+import AdminCoachRequestsPage from "./Dashboard/Pages/AdminCoachRequestsPage";
+import Messeges from "./Dashboard/Pages/Messeges";
+import Coaches from "./Dashboard/Pages/Members/Coaches";
+import Users from "./Dashboard/Pages/Members/Users";
 
 function App() {
   return (
@@ -67,9 +69,10 @@ function AuthWrapper() {
 function Content() {
   const location = useLocation();
   const isUserProfileRoute = location.pathname.startsWith("/user-profile");
+  const adminDashboard = location.pathname.startsWith("/dashboard");
   return (
     <>
-      {!isUserProfileRoute && <Navbar />}
+      {!isUserProfileRoute && !adminDashboard && <Navbar />}
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
@@ -93,10 +96,6 @@ function Content() {
         <Route path="videoChat" element={<VideoChat />} />
         <Route path="ScheduleMeeting" element={<ScheduleMeeting />} />
         <Route path="*" element={<NotFound />} />
-        <Route
-          path="AdminCoachRequestsPage"
-          element={<AdminCoachRequestsPage />}
-        />
 
         {/* Protected Routes */}
         <Route
@@ -120,10 +119,15 @@ function Content() {
         {/* Dashboard */}
         <Route path="dashboard" element={<DashLayout />}>
           <Route path="home" element={<DashboardHome />} />
-          <Route path="members" element={<Members />} />
+          <Route path="coach-requests" element={<AdminCoachRequestsPage />} />
+          <Route path="messages" element={<Messeges />} />
+          <Route path="members">
+            <Route path="coaches" element={<Coaches />} />
+            <Route path="users" element={<Users />} />
+          </Route>
         </Route>
       </Routes>
-      {!isUserProfileRoute && <Footer />}
+      {!isUserProfileRoute && !adminDashboard && <Footer />}
     </>
   );
 }

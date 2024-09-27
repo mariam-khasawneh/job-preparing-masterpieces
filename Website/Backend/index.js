@@ -15,7 +15,7 @@ const passport = require("passport");
 require("./config/passport");
 
 // Use environment variables
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
