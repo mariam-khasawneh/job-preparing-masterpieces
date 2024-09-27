@@ -1,53 +1,18 @@
-// export default ProfileComponent;
-import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Edit2, User, Mail, FileText, Camera } from "lucide-react";
+import { Edit2, User, Mail, FileText } from "lucide-react";
 import FormInput from "../../Components/FormInput";
 import Cookies from "js-cookie";
 import Button from "../../Components/Button/Button";
 import ProfileImageCircle from "../../Components/ProfileImageCircle";
+import useGetUserProfile from "../../Hooks/useGetUserProfile";
+import { useState } from "react";
 
 const ProfileComponent = () => {
-  const [userData, setUserData] = useState({
-    full_name: "",
-    role: "",
-    user_name: "",
-    email: "",
-    bio: "",
-    profilePicture: "",
-  });
+  const { userData, setUserData, isLoading, error, fetchUserData } =
+    useGetUserProfile();
   const [isEditing, setIsEditing] = useState(false);
   const [errors, setErrors] = useState({});
   const [newProfilePicture, setNewProfilePicture] = useState(null);
-
-  useEffect(() => {
-    fetchUserData();
-  }, []);
-
-  const fetchUserData = async () => {
-    try {
-      const token = Cookies.get("token");
-      if (!token) {
-        throw new Error("No token found in cookies");
-      }
-
-      const response = await axios.get(
-        "http://localhost:3000/api/users/profile",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        }
-      );
-      setUserData(response.data.user);
-    } catch (error) {
-      console.error(
-        "Error fetching user data:",
-        error.response ? error.response.data : error.message
-      );
-    }
-  };
 
   const handleInputChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -95,6 +60,13 @@ const ProfileComponent = () => {
     }
   };
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
   return (
     <div className="max-w-2xl mx-auto p-4">
       <div className="py-5 flex justify-between items-center border-b border-gray-200">
