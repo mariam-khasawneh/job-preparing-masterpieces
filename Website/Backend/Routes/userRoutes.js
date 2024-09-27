@@ -19,12 +19,7 @@ router.get("/count", userController.getUsersCount);
 router.get("/:username", userController.getUser);
 
 // PUT Routes
-router.put(
-  "/profile",
-  authenticateJWT,
-  upload.single("profilePicture"),
-  userController.updateUserProfile
-);
+router.put("/profile", authenticateJWT, userController.updateUserProfile);
 router.put("/:username", authenticateJWT, userController.updateUser);
 
 // PATCH Routes

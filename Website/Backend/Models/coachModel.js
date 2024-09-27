@@ -7,6 +7,7 @@ const coachSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      unique: true,
     },
     cv: {
       type: String, // URL or path to the CV file
@@ -27,6 +28,15 @@ const coachSchema = new Schema(
     introductoryVideo: {
       type: String, // URL to the introductory video
       required: true,
+    },
+    linkedIn: {
+      type: String, // LinkedIn profile URL
+    },
+    skills: {
+      type: [String], // Array of skills
+    },
+    about: {
+      type: String, // Short description about the coach
     },
     approvedDate: {
       type: Date,
