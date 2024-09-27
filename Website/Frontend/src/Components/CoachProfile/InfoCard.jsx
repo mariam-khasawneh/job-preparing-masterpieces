@@ -18,13 +18,13 @@ function InfoCard() {
       <div className="grid grid-cols-4 md:grid-cols-5 gap-2">
         <div className="col-span-3 md:col-span-4">
           <Link to="/appointment" className="w-full">
-            <Button secondary larg className="">
+          <Button  large={true} primary={true}> 
               Book a Session
             </Button>
           </Link>
         </div>
         <div className="col-span-1">
-          <Button primary larg>
+          <Button  large={true} secondary={true}> 
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="18"
