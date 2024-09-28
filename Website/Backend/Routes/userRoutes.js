@@ -19,7 +19,7 @@ router.get("/count", userController.getUsersCount);
 router.get("/:username", userController.getUser);
 
 // PUT Routes
-router.put("/profile", authenticateJWT, userController.updateUserProfile);
+router.patch("/profile", authenticateJWT, userController.updateUserProfile);
 router.put("/:username", authenticateJWT, userController.updateUser);
 
 // PATCH Routes
