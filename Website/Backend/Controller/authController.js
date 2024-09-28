@@ -37,6 +37,7 @@ exports.registerUser = async (req, res) => {
       message: "User registered successfully",
       username: user.user_name,
       token,
+      role: user.role,
     });
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -63,17 +64,12 @@ exports.loginUser = async (req, res) => {
 
     // If login is successful:
     const token = createToken(user);
-
-    // Set token in cookie
-    // res.cookie("token", token, {
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV === "production",
-    //   sameSite: "Lax",
-    // });
-
-    res
-      .status(200)
-      .json({ message: "Login successful", username: user.user_name, token });
+    res.status(200).json({
+      message: "Login successful",
+      username: user.user_name,
+      token,
+      role: user.role,
+    });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

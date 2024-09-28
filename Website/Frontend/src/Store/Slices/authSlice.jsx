@@ -58,7 +58,7 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.isLoggedIn = true;
-        state.user = action.payload.user;
+        state.user = action.payload;
         state.token = action.payload.token;
         Cookies.set("token", action.payload.token, {
           expires: 7,
