@@ -5,6 +5,7 @@ import SessionsPage from "./SessionsPage";
 import CoursesPage from "./CoursesPage";
 import Account from "./Account";
 import CoachRequestForm from "./CoachRequestForm";
+import CoachProfileSettings from "../CoachProfile/CoachProfileSettings";
 import { House } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 
@@ -26,6 +27,8 @@ const UserProfilePage = () => {
         return <Account />;
       case "Coach Request":
         return <CoachRequestForm />;
+      case "Coach Profile":
+        return <CoachProfileSettings />;
       default:
         return <div>Page not found</div>;
     }

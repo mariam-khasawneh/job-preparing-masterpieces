@@ -12,6 +12,7 @@ import {
   Play,
   UserPen,
   UserPlus,
+  User,
 } from "lucide-react";
 const Sidebar = ({
   setActivePage,
@@ -41,6 +42,7 @@ const Sidebar = ({
           { name: "Sessions", icon: <Video size={20} /> },
           { name: "Courses", icon: <Play size={20} /> },
           { name: "Coach Request", icon: <UserPlus size={20} /> },
+          { name: "Coach Profile", icon: <User size={20} /> },
         ].map((item) => (
           <li key={item.name} className="mb-2">
             <button
