@@ -1,41 +1,41 @@
-import axios from "axios";
-import { Edit2, User, Mail, FileText } from "lucide-react";
-import FormInput from "../../Components/FormInput";
-import Cookies from "js-cookie";
-import Button from "../../Components/Button/Button";
-import ProfileImageCircle from "../../Components/ProfileImageCircle";
-import useGetUserProfile from "../../Hooks/useGetUserProfile";
-import { useState } from "react";
+import React, { useState } from "react";
+import { Edit2, User, Mail, FileText, Camera } from "lucide-react";
 import { Helmet } from "react-helmet-async";
+import axios from "axios";
+import Cookies from "js-cookie";
+import useGetUserProfile from "../../Hooks/useGetUserProfile";
+
+import { Button } from "@/Components/ui/button";
+import { Input } from "@/Components/ui/input";
+import { Textarea } from "@/Components/ui/textarea";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardFooter,
+} from "@/Components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
+import { toast } from "react-hot-toast";
 
 const ProfileComponent = () => {
   const { userData, setUserData, isLoading, error, fetchUserData } =
     useGetUserProfile();
   const [isEditing, setIsEditing] = useState(false);
-  const [errors, setErrors] = useState({});
   const [newProfilePicture, setNewProfilePicture] = useState(null);
 
   const handleInputChange = (e) => {
-    setUserData({ ...userData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setUserData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleFileChange = (e) => {
     setNewProfilePicture(e.target.files[0]);
   };
 
-  const validateForm = () => {
-    let newErrors = {};
-    if (!userData.full_name) newErrors.full_name = "Full name is required";
-    if (!userData.email) newErrors.email = "Email is required";
-    if (!/\S+@\S+\.\S+/.test(userData.email))
-      newErrors.email = "Email is invalid";
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm()) return;
+    const updateToast = toast.loading("Updating profile...");
+
     try {
       const formData = new FormData();
       formData.append("full_name", userData.full_name);
@@ -54,10 +54,13 @@ const ProfileComponent = () => {
         },
         withCredentials: true,
       });
+
       setIsEditing(false);
-      fetchUserData(); // Refresh user data after update
+      fetchUserData();
+      toast.success("Profile updated successfully", { id: updateToast });
     } catch (error) {
       console.error("Error updating user data:", error);
+      toast.error("Failed to update profile", { id: updateToast });
     }
   };
 
@@ -68,94 +71,120 @@ const ProfileComponent = () => {
   if (error) {
     return <div>Error: {error}</div>;
   }
+
   return (
     <>
       <Helmet>
         <title>JobReady | User Account Settings</title>
       </Helmet>
-      <div className="max-w-2xl mx-auto p-4">
-        <div className="py-5 flex justify-between items-center border-b border-gray-200">
-          <div>
-            <h1 className="text-2xl font-bold mb-2">My Account Settings</h1>
-          </div>
-          <button onClick={() => setIsEditing(!isEditing)} className="w-8">
-            <Edit2 className="mr-2 h-6 w-6 text-primaryIndigo" />
-          </button>
+      <div className="max-w-3xl mx-auto p-6 space-y-6">
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-bold">My Account Settings</h2>
+          <Button
+            onClick={() => setIsEditing(!isEditing)}
+            variant="outline"
+            size="icon"
+          >
+            <Edit2 className="h-4 w-4" />
+          </Button>
         </div>
-        <div className="">
-          <div className="flex items-end my-6">
-            <ProfileImageCircle
-              fullName={userData.full_name}
-              isEditing={isEditing}
-              handleFileChange={handleFileChange}
-            />
-            <div>
-              <h3 className="text-xl font-semibold text-gray-900">
-                {userData.full_name}
-              </h3>
-              <p className="text-gray-600">{userData.role}</p>
-            </div>
-          </div>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <FormInput
-              label="Full Name"
-              name="full_name"
-              value={userData.full_name}
-              onChange={handleInputChange}
-              placeholder="Enter your full name"
-              disabled={!isEditing}
-              error={errors.full_name}
-              leftIcon={<User className="h-5 w-5 text-gray-400" />}
-            />
-            <FormInput
-              label="User_name"
-              name="user_name"
-              value={userData.user_name}
-              onChange={handleInputChange}
-              placeholder="Enter your user_name"
-              disabled={!isEditing}
-              error={errors.user_name}
-              leftIcon={<User className="h-5 w-5 text-gray-400" />}
-            />
-            <FormInput
-              label="Email"
-              name="email"
-              type="email"
-              value={userData.email}
-              onChange={handleInputChange}
-              placeholder="Enter your email"
-              disabled={!isEditing}
-              error={errors.email}
-              leftIcon={<Mail className="h-5 w-5 text-gray-400" />}
-            />
-            <div className="flex flex-col">
-              <label className="mb-1 text-sm font-medium text-gray-700">
-                Bio
-              </label>
-              <div className="relative">
-                <FileText className="absolute top-3 left-3 h-5 w-5 text-gray-400" />
-                <textarea
-                  name="bio"
-                  value={userData.bio}
-                  onChange={handleInputChange}
-                  disabled={!isEditing}
-                  placeholder="Enter your bio"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-indigo-500 block w-full pl-10 p-2 outline-none"
-                  rows="3"
+
+        <Card>
+          <CardHeader>
+            <div className="flex items-center space-x-4">
+              <Avatar className="h-20 w-20">
+                <AvatarImage
+                  src={userData.profilePicture}
+                  alt={userData.full_name}
                 />
+                <AvatarFallback>{userData.full_name?.charAt(0)}</AvatarFallback>
+              </Avatar>
+              <div>
+                <h3 className="text-xl font-semibold">{userData.full_name}</h3>
+                <p className="text-sm text-gray-500">{userData.role}</p>
               </div>
             </div>
-            {isEditing && (
-              <Button
-                extraSmall={true}
-                type="submit"
-                className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Save Changes
-              </Button>
-            )}
-          </form>{" "}
-        </div>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Full Name</label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+                  <Input
+                    name="full_name"
+                    value={userData.full_name}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Username</label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+                  <Input
+                    name="user_name"
+                    value={userData.user_name}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Email</label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+                  <Input
+                    name="email"
+                    type="email"
+                    value={userData.email}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Bio</label>
+                <div className="relative">
+                  <FileText className="absolute left-3 top-3 text-gray-500" />
+                  <Textarea
+                    name="bio"
+                    value={userData.bio}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                    className="pl-10 min-h-[100px]"
+                  />
+                </div>
+              </div>
+
+              {isEditing && (
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Profile Picture</label>
+                  <div className="relative">
+                    <Camera className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+                    <Input
+                      type="file"
+                      onChange={handleFileChange}
+                      className="pl-10"
+                    />
+                  </div>
+                </div>
+              )}
+            </form>
+          </CardContent>
+          {isEditing && (
+            <CardFooter>
+              <Button onClick={handleSubmit}>Save Changes</Button>
+            </CardFooter>
+          )}
+        </Card>
       </div>
     </>
   );
