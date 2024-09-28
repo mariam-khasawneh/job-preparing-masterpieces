@@ -1,6 +1,6 @@
 const Service = require("../Models/serviceModel");
 const User = require("../Models/userModel");
-const Coach = require("../Models/coachModel");
+// const Coach = require("../Models/coachModel");
 const coachController = require("../Controller/coachController");
 
 // Create a new service
@@ -41,10 +41,18 @@ exports.createService = async (req, res) => {
   }
 };
 
-// Get all services
+// Get all services with coach's full name
 exports.getAllServices = async (req, res) => {
   try {
-    const services = await Service.find().populate("coachId", "full_name"); // Populate coach's name
+    const services = await Service.find().populate({
+      path: "coachId",
+      select: "userId", // Select the userId to access the User model
+      populate: {
+        path: "userId", // Populate the User model through userId
+        select: "full_name user_name", // Select the full name from the User model
+      },
+    });
+
     res.status(200).json(services);
   } catch (error) {
     res.status(500).json({ message: "Failed to get services", error });

@@ -23,6 +23,7 @@ import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/Components/ui/alert";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { Helmet } from "react-helmet-async";
 
 const CreateServiceForm = () => {
   const {
@@ -70,159 +71,168 @@ const CreateServiceForm = () => {
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
-      <CardHeader>
-        <CardTitle>Create New Service</CardTitle>
-        <CardDescription>
-          Fill in the details to create a new coaching service.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* Service Name & Type */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            <div className="space-y-2">
-              <Label htmlFor="service">Service Name</Label>
-              <Input
-                id="service"
-                {...register("service", {
-                  required: "Service name is required",
-                })}
-              />
-              {errors.service && (
-                <p className="text-red-500 text-sm">{errors.service.message}</p>
-              )}
-            </div>
+    <>
+      <Helmet>
+        <title>JobReady | Create Service</title>
+      </Helmet>
+      <Card className="w-full max-w-2xl mx-auto">
+        <CardHeader>
+          <CardTitle>Create New Service</CardTitle>
+          <CardDescription>
+            Fill in the details to create a new coaching service.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            {/* Service Name & Type */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <div className="space-y-2">
+                <Label htmlFor="service">Service Name</Label>
+                <Input
+                  id="service"
+                  {...register("service", {
+                    required: "Service name is required",
+                  })}
+                />
+                {errors.service && (
+                  <p className="text-red-500 text-sm">
+                    {errors.service.message}
+                  </p>
+                )}
+              </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="serviceType">Service Type</Label>
-              <Select
-                onValueChange={(value) => setValue("serviceType", value)} // Manually set value
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a service type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Consultation">Consultation</SelectItem>
-                  <SelectItem value="Resume Review">Resume Review</SelectItem>
-                  <SelectItem value="Interview Preparation">
-                    Interview Preparation
-                  </SelectItem>
-                  <SelectItem value="Career Guidance">
-                    Career Guidance
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-              {errors.serviceType && (
-                <p className="text-red-500 text-sm">
-                  {errors.serviceType.message}
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* Service Price and Currency */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            <div className="space-y-2">
-              <Label htmlFor="price">Price</Label>
-              <Input
-                type="number"
-                id="price"
-                {...register("price", {
-                  required: "Price is required",
-                  min: 0,
-                })}
-              />
-              {errors.price && (
-                <p className="text-red-500 text-sm">{errors.price.message}</p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="currency">Currency</Label>
-              <Select
-                onValueChange={(value) => setValue("currency", value)} // Manually set value
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a currency" />
-                </SelectTrigger>
-                <SelectContent>
-                  {[
-                    "USD",
-                    "EUR",
-                    "GBP",
-                    "JOD",
-                    "AUD",
-                    "CAD",
-                    "INR",
-                    "JPY",
-                    "CNY",
-                  ].map((currency) => (
-                    <SelectItem key={currency} value={currency}>
-                      {currency}
+              <div className="space-y-2">
+                <Label htmlFor="serviceType">Service Type</Label>
+                <Select
+                  onValueChange={(value) => setValue("serviceType", value)} // Manually set value
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a service type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Consultation">Consultation</SelectItem>
+                    <SelectItem value="Resume Review">Resume Review</SelectItem>
+                    <SelectItem value="Interview Preparation">
+                      Interview Preparation
                     </SelectItem>
-                  ))}
+                    <SelectItem value="Career Guidance">
+                      Career Guidance
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+                {errors.serviceType && (
+                  <p className="text-red-500 text-sm">
+                    {errors.serviceType.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Service Price and Currency */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <div className="space-y-2">
+                <Label htmlFor="price">Price</Label>
+                <Input
+                  type="number"
+                  id="price"
+                  {...register("price", {
+                    required: "Price is required",
+                    min: 0,
+                  })}
+                />
+                {errors.price && (
+                  <p className="text-red-500 text-sm">{errors.price.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="currency">Currency</Label>
+                <Select
+                  onValueChange={(value) => setValue("currency", value)} // Manually set value
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a currency" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {[
+                      "USD",
+                      "EUR",
+                      "GBP",
+                      "JOD",
+                      "AUD",
+                      "CAD",
+                      "INR",
+                      "JPY",
+                      "CNY",
+                    ].map((currency) => (
+                      <SelectItem key={currency} value={currency}>
+                        {currency}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {errors.currency && (
+                  <p className="text-red-500 text-sm">
+                    {errors.currency.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/*Service Duration*/}
+            <div className="space-y-2">
+              <Label htmlFor="duration">Duration</Label>
+              <Select
+                onValueChange={(value) => setValue("duration", value)} // Manually set value
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select duration" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="30 minutes">30 minutes</SelectItem>
+                  <SelectItem value="1 hour">1 hour</SelectItem>
+                  <SelectItem value="90 minutes">90 minutes</SelectItem>
+                  <SelectItem value="2 hours">2 hours</SelectItem>
                 </SelectContent>
               </Select>
-              {errors.currency && (
+              {errors.duration && (
                 <p className="text-red-500 text-sm">
-                  {errors.currency.message}
+                  {errors.duration.message}
                 </p>
               )}
             </div>
-          </div>
 
-          {/*Service Duration*/}
-          <div className="space-y-2">
-            <Label htmlFor="duration">Duration</Label>
-            <Select
-              onValueChange={(value) => setValue("duration", value)} // Manually set value
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select duration" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="30 minutes">30 minutes</SelectItem>
-                <SelectItem value="1 hour">1 hour</SelectItem>
-                <SelectItem value="90 minutes">90 minutes</SelectItem>
-                <SelectItem value="2 hours">2 hours</SelectItem>
-              </SelectContent>
-            </Select>
-            {errors.duration && (
-              <p className="text-red-500 text-sm">{errors.duration.message}</p>
+            {/* Service Description */}
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                {...register("description", {
+                  required: "Description is required",
+                })}
+              />
+              {errors.description && (
+                <p className="text-red-500 text-sm">
+                  {errors.description.message}
+                </p>
+              )}
+            </div>
+
+            {error && (
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
             )}
-          </div>
 
-          {/* Service Description */}
-          <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              {...register("description", {
-                required: "Description is required",
-              })}
-            />
-            {errors.description && (
-              <p className="text-red-500 text-sm">
-                {errors.description.message}
-              </p>
-            )}
-          </div>
-
-          {error && (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-
-          <Button type="submit" disabled={isLoading}>
-            {isLoading ? "Creating..." : "Create Service"}
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? "Creating..." : "Create Service"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+    </>
   );
 };
 

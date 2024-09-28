@@ -33,6 +33,7 @@ import SignUp2 from "./Pages/SignUp2";
 import SignUp from "./Pages/SignUp";
 import VideoChat from "./Pages/videoChat";
 import ProtectedComponent from "./Pages/ProtectedComponent";
+import ServicesPage from "./Pages/ServicesPage";
 
 // Protected Pages  ===============================
 import ProtectedRoute from "./Components/ProtectedRoute";
@@ -99,6 +100,7 @@ function Content() {
         <Route path="appointment" element={<Appointment />} />
         <Route path="videoChat" element={<VideoChat />} />
         <Route path="ScheduleMeeting" element={<ScheduleMeeting />} />
+        <Route path="services" element={<ServicesPage />} />
         <Route path="*" element={<NotFound />} />
 
         {/* Protected Routes */}
