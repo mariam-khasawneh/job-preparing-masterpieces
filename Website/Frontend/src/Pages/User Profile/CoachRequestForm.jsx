@@ -9,6 +9,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { checkAuthState } from "../../Store/Slices/authSlice";
 import Cookies from "js-cookie";
 import { toast } from "react-hot-toast";
+import { Helmet } from "react-helmet-async";
 
 const CoachRequestForm = () => {
   const dispatch = useDispatch();
@@ -194,116 +195,123 @@ const CoachRequestForm = () => {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
-      <div className="py-5 flex justify-between items-center border-b border-gray-200">
-        <h1 className="text-2xl font-bold mb-2">Coach Request Form</h1>
-      </div>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block mb-2">Upload CV (PDF)</label>
-          <input
-            type="file"
-            accept=".pdf"
-            onChange={(e) => handleFileChange(e, "cv")}
-            className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"
-          />
-          {errors.cv && <p className="text-red-500 text-sm">{errors.cv}</p>}
+    <>
+      <Helmet>
+        <title>JobReady | Coach Request Form</title>
+      </Helmet>
+      <div className="max-w-2xl mx-auto p-4">
+        <div className="py-5 flex justify-between items-center border-b border-gray-200">
+          <h1 className="text-2xl font-bold mb-2">Coach Request Form</h1>
         </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block mb-2">Upload CV (PDF)</label>
+            <input
+              type="file"
+              accept=".pdf"
+              onChange={(e) => handleFileChange(e, "cv")}
+              className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"
+            />
+            {errors.cv && <p className="text-red-500 text-sm">{errors.cv}</p>}
+          </div>
 
-        <div>
-          <label className="block mb-2">Upload Introductory Video</label>
-          <input
-            type="file"
-            accept="video/*"
-            onChange={(e) => handleFileChange(e, "video")}
-            className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"
-          />
-          {errors.video && (
-            <p className="text-red-500 text-sm">{errors.video}</p>
-          )}
-        </div>
+          <div>
+            <label className="block mb-2">Upload Introductory Video</label>
+            <input
+              type="file"
+              accept="video/*"
+              onChange={(e) => handleFileChange(e, "video")}
+              className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"
+            />
+            {errors.video && (
+              <p className="text-red-500 text-sm">{errors.video}</p>
+            )}
+          </div>
 
-        <div>
-          <FormInput
-            label="Experience"
-            name="experience"
-            type="textarea"
-            placeholder="Describe your coaching experience"
-            value={formData.experience}
-            onChange={handleInputChange}
-            error={errors.experience}
-            leftIcon={<BookOpen size={20} />}
-          />
-        </div>
+          <div>
+            <FormInput
+              label="Experience"
+              name="experience"
+              type="textarea"
+              placeholder="Describe your coaching experience"
+              value={formData.experience}
+              onChange={handleInputChange}
+              error={errors.experience}
+              leftIcon={<BookOpen size={20} />}
+            />
+          </div>
 
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold mb-2">Educational Background</h3>
-          {formData.educationalBackground.map((edu, index) => (
-            <div key={index} className="mb-4 p-4 border rounded">
-              <FormInput
-                label="University"
-                value={edu.university}
-                onChange={(e) =>
-                  handleEducationChange(index, "university", e.target.value)
-                }
-              />
-              <FormInput
-                label="Credential"
-                value={edu.credential}
-                onChange={(e) =>
-                  handleEducationChange(index, "credential", e.target.value)
-                }
-              />
-              <FormInput
-                label="Major"
-                value={edu.major}
-                onChange={(e) =>
-                  handleEducationChange(index, "major", e.target.value)
-                }
-              />
-              <FormInput
-                label="Period"
-                value={edu.period}
-                onChange={(e) =>
-                  handleEducationChange(index, "period", e.target.value)
-                }
-              />
-              {index > 0 && (
-                <Button
-                  secondary={true}
-                  extraSmall={true}
-                  onClick={() => removeEducation(index)}
-                  variant="danger"
-                  className="mt-2"
-                >
-                  Remove
-                </Button>
-              )}
-            </div>
-          ))}
+          <div className="mb-4">
+            <h3 className="text-lg font-semibold mb-2">
+              Educational Background
+            </h3>
+            {formData.educationalBackground.map((edu, index) => (
+              <div key={index} className="mb-4 p-4 border rounded">
+                <FormInput
+                  label="University"
+                  value={edu.university}
+                  onChange={(e) =>
+                    handleEducationChange(index, "university", e.target.value)
+                  }
+                />
+                <FormInput
+                  label="Credential"
+                  value={edu.credential}
+                  onChange={(e) =>
+                    handleEducationChange(index, "credential", e.target.value)
+                  }
+                />
+                <FormInput
+                  label="Major"
+                  value={edu.major}
+                  onChange={(e) =>
+                    handleEducationChange(index, "major", e.target.value)
+                  }
+                />
+                <FormInput
+                  label="Period"
+                  value={edu.period}
+                  onChange={(e) =>
+                    handleEducationChange(index, "period", e.target.value)
+                  }
+                />
+                {index > 0 && (
+                  <Button
+                    secondary={true}
+                    extraSmall={true}
+                    onClick={() => removeEducation(index)}
+                    variant="danger"
+                    className="mt-2"
+                  >
+                    Remove
+                  </Button>
+                )}
+              </div>
+            ))}
+            <Button
+              primaryOutlined={true}
+              extraSmall={true}
+              onClick={addEducation}
+              variant="secondary"
+              className="mt-2"
+            >
+              Add Education
+            </Button>
+          </div>
+
           <Button
-            primaryOutlined={true}
+            primary={true}
             extraSmall={true}
-            onClick={addEducation}
-            variant="secondary"
-            className="mt-2"
+            type="submit"
+            className="w-full"
           >
-            Add Education
+            Submit Request
           </Button>
-        </div>
 
-        <Button
-          primary={true}
-          extraSmall={true}
-          type="submit"
-          className="w-full"
-        >
-          Submit Request
-        </Button>
-
-        {errors.submit && <p className="text-red-500">{errors.submit}</p>}
-      </form>
-    </div>
+          {errors.submit && <p className="text-red-500">{errors.submit}</p>}
+        </form>
+      </div>
+    </>
   );
 };
 

@@ -10,8 +10,8 @@ import { FaUserAlt, FaLock } from "react-icons/fa";
 import { AiOutlineEyeInvisible, AiFillEye } from "react-icons/ai";
 import { Section } from "../Components/styles-components/containers";
 import { toast } from "react-hot-toast";
-import Cookies from "js-cookie";
 import { loginUser } from "../Store/Thunks/authThunks";
+import { Helmet } from "react-helmet-async";
 
 function Login() {
   return (
@@ -86,6 +86,9 @@ function LoginForm() {
 
   return (
     <>
+      <Helmet>
+        <title>JobReady | Login</title>
+      </Helmet>
       <form onSubmit={formik.handleSubmit} className="w-full">
         <div className="text-2xl font-bold text-primaryIndigo text-center py-4">
           Log In

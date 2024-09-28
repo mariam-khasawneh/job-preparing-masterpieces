@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 // Extra Modules
 import { Toaster } from "react-hot-toast";
 
-// Pages  ====================================================
+// Public Pages  ====================================================
 import Appointment from "./Pages/Appointment";
 import Article from "./Pages/Article";
 import Blog from "./Pages/Blog";
@@ -32,11 +32,14 @@ import ScheduleMeeting from "./Pages/ScheduleMeeting";
 import SignUp2 from "./Pages/SignUp2";
 import SignUp from "./Pages/SignUp";
 import VideoChat from "./Pages/videoChat";
-import UserProfilePage from "./Pages/User Profile/UserProfilePage";
-import ProtectedRoute from "./Components/ProtectedRoute";
 import ProtectedComponent from "./Pages/ProtectedComponent";
 
-// Dashboard ===============================
+// Protected Pages  ===============================
+import ProtectedRoute from "./Components/ProtectedRoute";
+import UserProfilePage from "./Pages/User Profile/UserProfilePage";
+import CoachProfileSettings from "./Pages/CoachProfile/CoachProfileSettings";
+
+// Dashboard Pages  ===============================
 import DashboardHome from "./Dashboard/Pages/Home";
 import DashLayout from "./Dashboard/Components/DashLayout";
 import Members from "./Dashboard/Pages/Members";
@@ -110,8 +113,15 @@ function Content() {
           path="user-profile"
           element={
             <ProtectedRoute>
-              {" "}
               <UserProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="coach-profile-settings"
+          element={
+            <ProtectedRoute>
+              <CoachProfileSettings />
             </ProtectedRoute>
           }
         />

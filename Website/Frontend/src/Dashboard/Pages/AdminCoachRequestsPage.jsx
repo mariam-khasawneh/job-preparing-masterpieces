@@ -39,6 +39,7 @@ import {
 } from "../../Components/ui/select";
 import Button from "@/Components/Button/Button";
 import { useState, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 const AdminCoachRequestsPage = () => {
   const [requests, setRequests] = useState([]);
   const [selectedRequest, setSelectedRequest] = useState(null);
@@ -148,172 +149,177 @@ The Coaching Team`;
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Coach Requests</h1>
-      <div className="mb-4 flex gap-2 items-center">
-        <SlidersHorizontal />
-        <Select onValueChange={handleFilterChange}>
-          <SelectTrigger className="w-[180px]" id="status-filter">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            <SelectItem value="pending">Pending</SelectItem>
-            <SelectItem value="approved">Approved</SelectItem>
-            <SelectItem value="rejected">Rejected</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      <Table>
-        <TableHeader className="bg-indigo-50">
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Request Date</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Details</TableHead>
-            <TableHead>Review</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredRequests.map((request) => (
-            <TableRow key={request._id}>
-              <TableCell>{request.userId.full_name}</TableCell>
-              <TableCell>{request.userId.email}</TableCell>
-              <TableCell>
-                {new Date(request.requestDate).toLocaleDateString()}
-              </TableCell>
-              <TableCell>
-                <StatusTag status={request.status} />
-              </TableCell>
-              <TableCell>
-                <div className="flex space-x-2">
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Eye
-                          className="cursor-pointer text-blue-500 hover:text-blue-700"
-                          onClick={() => handleViewDetails(request)}
-                        />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>View Details</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
-              </TableCell>
-              <TableCell>
-                {request.status === "pending" && (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <CheckCircle
-                          className="cursor-pointer text-green-500 hover:text-green-700"
-                          onClick={() => handleReview(request)}
-                        />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Review</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                )}
-              </TableCell>
+    <>
+      <Helmet>
+        <title>JobReady | Coach Requests</title>
+      </Helmet>
+      <div className="container mx-auto p-4">
+        <h1 className="text-2xl font-bold mb-4">Coach Requests</h1>
+        <div className="mb-4 flex gap-2 items-center">
+          <SlidersHorizontal />
+          <Select onValueChange={handleFilterChange}>
+            <SelectTrigger className="w-[180px]" id="status-filter">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="pending">Pending</SelectItem>
+              <SelectItem value="approved">Approved</SelectItem>
+              <SelectItem value="rejected">Rejected</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <Table>
+          <TableHeader className="bg-indigo-50">
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Request Date</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Details</TableHead>
+              <TableHead>Review</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Request Details</DialogTitle>
-          </DialogHeader>
-          {selectedRequest && (
-            <div>
-              <p>
-                <strong>Name:</strong> {selectedRequest.userId.full_name}
-              </p>
-              <p>
-                <strong>Email:</strong> {selectedRequest.userId.email}
-              </p>
-              <p>
-                <strong>Experience:</strong> {selectedRequest.experience}
-              </p>
-              <p>
-                <strong>Educational Background:</strong>
-              </p>
-              <ul>
-                {selectedRequest.educationalBackground.map((edu, index) => (
-                  <li key={index}>
-                    {edu.university} - {edu.major} ({edu.credential}) -{" "}
-                    {edu.period}
-                  </li>
-                ))}
-              </ul>
-              <div className="flex gap-1">
-                <a
-                  href={selectedRequest.cv}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Button primary={true} extraSmall={true} className="flex">
-                    {" "}
-                    View CV
-                  </Button>
-                </a>
+          </TableHeader>
+          <TableBody>
+            {filteredRequests.map((request) => (
+              <TableRow key={request._id}>
+                <TableCell>{request.userId.full_name}</TableCell>
+                <TableCell>{request.userId.email}</TableCell>
+                <TableCell>
+                  {new Date(request.requestDate).toLocaleDateString()}
+                </TableCell>
+                <TableCell>
+                  <StatusTag status={request.status} />
+                </TableCell>
+                <TableCell>
+                  <div className="flex space-x-2">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Eye
+                            className="cursor-pointer text-blue-500 hover:text-blue-700"
+                            onClick={() => handleViewDetails(request)}
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>View Details</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  {request.status === "pending" && (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <CheckCircle
+                            className="cursor-pointer text-green-500 hover:text-green-700"
+                            onClick={() => handleReview(request)}
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Review</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Request Details</DialogTitle>
+            </DialogHeader>
+            {selectedRequest && (
+              <div>
+                <p>
+                  <strong>Name:</strong> {selectedRequest.userId.full_name}
+                </p>
+                <p>
+                  <strong>Email:</strong> {selectedRequest.userId.email}
+                </p>
+                <p>
+                  <strong>Experience:</strong> {selectedRequest.experience}
+                </p>
+                <p>
+                  <strong>Educational Background:</strong>
+                </p>
+                <ul>
+                  {selectedRequest.educationalBackground.map((edu, index) => (
+                    <li key={index}>
+                      {edu.university} - {edu.major} ({edu.credential}) -{" "}
+                      {edu.period}
+                    </li>
+                  ))}
+                </ul>
+                <div className="flex gap-1">
+                  <a
+                    href={selectedRequest.cv}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button primary={true} extraSmall={true} className="flex">
+                      {" "}
+                      View CV
+                    </Button>
+                  </a>
 
-                <a
-                  href={selectedRequest.introductoryVideo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Button primary={true} extraSmall={true} className="flex">
-                    View Video
-                  </Button>
-                </a>
+                  <a
+                    href={selectedRequest.introductoryVideo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button primary={true} extraSmall={true} className="flex">
+                      View Video
+                    </Button>
+                  </a>
+                </div>
               </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
-      <AlertDialog open={isReviewOpen} onOpenChange={setIsReviewOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Review Request</AlertDialogTitle>
-            <AlertDialogDescription>
-              <div className="mb-4">
-                <label className="block mb-2">Status:</label>
-                <select
-                  value={reviewStatus}
-                  onChange={(e) => setReviewStatus(e.target.value)}
-                  className="w-full p-2 border rounded"
-                >
-                  <option value="">Select status</option>
-                  <option value="approved">Approve</option>
-                  <option value="rejected">Reject</option>
-                </select>
-              </div>
-              <div className="mb-4">
-                <label className="block mb-2">Comments:</label>
-                <textarea
-                  value={comments}
-                  onChange={(e) => setComments(e.target.value)}
-                  className="w-full p-2 border rounded"
-                  rows="3"
-                ></textarea>
-              </div>
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={submitReview}>
-              Submit Review
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+            )}
+          </DialogContent>
+        </Dialog>
+        <AlertDialog open={isReviewOpen} onOpenChange={setIsReviewOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Review Request</AlertDialogTitle>
+              <AlertDialogDescription>
+                <div className="mb-4">
+                  <label className="block mb-2">Status:</label>
+                  <select
+                    value={reviewStatus}
+                    onChange={(e) => setReviewStatus(e.target.value)}
+                    className="w-full p-2 border rounded"
+                  >
+                    <option value="">Select status</option>
+                    <option value="approved">Approve</option>
+                    <option value="rejected">Reject</option>
+                  </select>
+                </div>
+                <div className="mb-4">
+                  <label className="block mb-2">Comments:</label>
+                  <textarea
+                    value={comments}
+                    onChange={(e) => setComments(e.target.value)}
+                    className="w-full p-2 border rounded"
+                    rows="3"
+                  ></textarea>
+                </div>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={submitReview}>
+                Submit Review
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
+    </>
   );
 };
 

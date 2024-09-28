@@ -7,7 +7,7 @@ import Button from "../Components/Button/Button";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-
+import { Helmet } from "react-helmet-async";
 // Thunks
 import { registerUser } from "../Store/Thunks/authThunks";
 
@@ -19,11 +19,16 @@ import { AiOutlineEyeInvisible, AiFillEye } from "react-icons/ai";
 
 function SignUp() {
   return (
-    <Section className="justify-center min-h-screen">
-      <div className="w-full md:w-1/2 lg:w-1/3">
-        <SignUpForm />
-      </div>
-    </Section>
+    <>
+      <Helmet>
+        <title>JobReady | Sign Up</title>
+      </Helmet>
+      <Section className="justify-center min-h-screen">
+        <div className="w-full md:w-1/2 lg:w-1/3">
+          <SignUpForm />
+        </div>
+      </Section>
+    </>
   );
 }
 

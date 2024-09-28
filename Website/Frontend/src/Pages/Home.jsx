@@ -21,11 +21,15 @@ import {
   Typography,
   CardHeader,
 } from "@material-tailwind/react";
+import { Helmet } from "react-helmet-async";
 
 // Page Component
 function Home() {
   return (
     <>
+      <Helmet>
+        <title>JobReady | Home Page</title>
+      </Helmet>
       <HeroSection />
       <AboutSection />
       <Features />

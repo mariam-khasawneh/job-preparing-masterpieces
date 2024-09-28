@@ -31,6 +31,7 @@ import {
 import { toast } from "react-hot-toast";
 import useSendEmail from "@/Hooks/useSendEmail";
 import { ArrowUpDown } from "lucide-react";
+import { Helmet } from "react-helmet-async";
 
 const Coaches = () => {
   const [coaches, setCoaches] = useState([]);
@@ -163,104 +164,109 @@ const Coaches = () => {
   };
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Coaches Dashboard</h1>
+    <>
+      <Helmet>
+        <title>JobReady | Coaches</title>
+      </Helmet>
+      <div className="p-8">
+        <h1 className="text-2xl font-bold mb-4">Coaches Dashboard</h1>
 
-      <div className="flex gap-4 mb-4 items-center">
-        <Input
-          placeholder="Search by coach name"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="max-w-sm"
-        />
-        <Select value={filter} onValueChange={setFilter}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filter by status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            <SelectItem value="active">Active</SelectItem>
-            <SelectItem value="inactive">Inactive</SelectItem>
-          </SelectContent>
-        </Select>
-        <div className="flex items-center space-x-2">
-          <Switch
-            checked={bulkAction === "activate"}
-            onCheckedChange={handleBulkActionChange}
+        <div className="flex gap-4 mb-4 items-center">
+          <Input
+            placeholder="Search by coach name"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="max-w-sm"
           />
-          <span>
-            {bulkAction === "activate" ? "Activate" : "Deactivate"} Selected
-          </span>
+          <Select value={filter} onValueChange={setFilter}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Filter by status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="active">Active</SelectItem>
+              <SelectItem value="inactive">Inactive</SelectItem>
+            </SelectContent>
+          </Select>
+          <div className="flex items-center space-x-2">
+            <Switch
+              checked={bulkAction === "activate"}
+              onCheckedChange={handleBulkActionChange}
+            />
+            <span>
+              {bulkAction === "activate" ? "Activate" : "Deactivate"} Selected
+            </span>
+          </div>
         </div>
-      </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>
-              <Checkbox
-                checked={
-                  selectedCoaches.length === filteredCoaches.length &&
-                  filteredCoaches.length > 0
-                }
-                onCheckedChange={handleSelectAll}
-              />
-            </TableHead>
-            <TableHead>
-              <div
-                className="flex items-center cursor-pointer"
-                onClick={() =>
-                  setSortOrder(sortOrder === "asc" ? "desc" : "asc")
-                }
-              >
-                Name
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-              </div>
-            </TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Status</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredCoaches.map((coach) => (
-            <TableRow key={coach._id}>
-              <TableCell>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>
                 <Checkbox
-                  checked={selectedCoaches.includes(coach._id)}
-                  onCheckedChange={() => handleCheckboxChange(coach._id)}
+                  checked={
+                    selectedCoaches.length === filteredCoaches.length &&
+                    filteredCoaches.length > 0
+                  }
+                  onCheckedChange={handleSelectAll}
                 />
-              </TableCell>
-              <TableCell>{coach.userId.full_name}</TableCell>
-              <TableCell>{coach.userId.email}</TableCell>
-              <TableCell>
-                <Switch
-                  checked={coach.isActivated}
-                  onCheckedChange={() => handleStatusChange(coach)}
-                />
-              </TableCell>
+              </TableHead>
+              <TableHead>
+                <div
+                  className="flex items-center cursor-pointer"
+                  onClick={() =>
+                    setSortOrder(sortOrder === "asc" ? "desc" : "asc")
+                  }
+                >
+                  Name
+                  <ArrowUpDown className="ml-2 h-4 w-4" />
+                </div>
+              </TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Status</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {filteredCoaches.map((coach) => (
+              <TableRow key={coach._id}>
+                <TableCell>
+                  <Checkbox
+                    checked={selectedCoaches.includes(coach._id)}
+                    onCheckedChange={() => handleCheckboxChange(coach._id)}
+                  />
+                </TableCell>
+                <TableCell>{coach.userId.full_name}</TableCell>
+                <TableCell>{coach.userId.email}</TableCell>
+                <TableCell>
+                  <Switch
+                    checked={coach.isActivated}
+                    onCheckedChange={() => handleStatusChange(coach)}
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
 
-      <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Confirm Action</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to {bulkAction} {selectedCoaches.length}{" "}
-              selected coach(es)? Emails will be sent to notify the users.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmBulkAction}>
-              Confirm
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+        <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Confirm Action</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to {bulkAction} {selectedCoaches.length}{" "}
+                selected coach(es)? Emails will be sent to notify the users.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={confirmBulkAction}>
+                Confirm
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
+    </>
   );
 };
 

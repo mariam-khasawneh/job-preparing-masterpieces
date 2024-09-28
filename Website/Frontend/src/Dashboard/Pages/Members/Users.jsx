@@ -38,6 +38,7 @@ import { ArrowUpDown, ChevronLeft, ChevronRight } from "lucide-react";
 import axios from "axios";
 import useSendEmail from "@/Hooks/useSendEmail";
 import toast from "react-hot-toast";
+import { Helmet } from "react-helmet-async";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -171,6 +172,9 @@ const Users = () => {
 
   return (
     <>
+      <Helmet>
+        <title>JobReady | Users</title>
+      </Helmet>
       <Card className="w-full">
         <CardHeader>
           <CardTitle>User Management</CardTitle>
