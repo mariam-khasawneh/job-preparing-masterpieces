@@ -8,6 +8,7 @@ import CoachRequestForm from "./CoachRequestForm";
 import CoachProfileSettings from "../CoachProfile/CoachProfileSettings";
 import { House } from "lucide-react";
 import { Helmet } from "react-helmet-async";
+import CreateServiceForm from "../CoachProfile/CreateServiceForm";
 
 const UserProfilePage = () => {
   const [activePage, setActivePage] = useState("Overview");
@@ -29,6 +30,8 @@ const UserProfilePage = () => {
         return <CoachRequestForm />;
       case "Coach Profile":
         return <CoachProfileSettings />;
+      case "Create Service":
+        return <CreateServiceForm />;
       default:
         return <div>Page not found</div>;
     }

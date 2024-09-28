@@ -48,20 +48,16 @@ exports.toggleCoachActivation = async (req, res) => {
 };
 
 // Get coach id by user id
-exports.getCoachIdByUserId = async (req, res) => {
-  const userId = req.params.userId;
-
+exports.getCoachIdByUserId = async (userId) => {
   try {
     const coach = await Coach.findOne({ userId }).select("_id");
     if (!coach) {
-      return res
-        .status(404)
-        .json({ message: "No coach found for the given user ID." });
+      throw new Error("No coach found for the given user ID.");
     }
-    res.status(200).json({ coachId: coach._id });
+    return coach._id; // Return the coach ID
   } catch (error) {
     console.error("Error fetching coach ID:", error);
-    res.status(500).json({ message: "Server error." });
+    throw error; // Propagate the error
   }
 };
 

@@ -38,6 +38,7 @@ import ProtectedComponent from "./Pages/ProtectedComponent";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import UserProfilePage from "./Pages/User Profile/UserProfilePage";
 import CoachProfileSettings from "./Pages/CoachProfile/CoachProfileSettings";
+import CreateServiceForm from "./Pages/CoachProfile/CreateServiceForm";
 
 // Dashboard Pages  ===============================
 import DashboardHome from "./Dashboard/Pages/Home";
@@ -122,6 +123,14 @@ function Content() {
           element={
             <ProtectedRoute>
               <CoachProfileSettings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="create-service-form"
+          element={
+            <ProtectedRoute>
+              <CreateServiceForm />
             </ProtectedRoute>
           }
         />
