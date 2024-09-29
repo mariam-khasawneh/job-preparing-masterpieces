@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Edit2, User, Mail, FileText, Camera } from "lucide-react";
 import { Helmet } from "react-helmet-async";
-import axios from "axios";
-import Cookies from "js-cookie";
 import useGetUserProfile from "../../Hooks/useGetUserProfile";
+import usePatchUserProfile from "../../Hooks/usePatchUserProfile"; // Import the custom hook
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../../Firebase/firebase";
 
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
@@ -15,11 +16,21 @@ import {
   CardFooter,
 } from "@/Components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
-import { toast } from "react-hot-toast";
 
 const ProfileComponent = () => {
-  const { userData, setUserData, isLoading, error, fetchUserData } =
-    useGetUserProfile();
+  const {
+    userData,
+    setUserData,
+    isLoading: isUserLoading,
+    error: userError,
+    fetchUserData,
+  } = useGetUserProfile();
+  const {
+    patchUserProfile,
+    isLoading: isPatchLoading,
+    error: patchError,
+  } = usePatchUserProfile(); // Use the custom hook
+
   const [isEditing, setIsEditing] = useState(false);
   const [newProfilePicture, setNewProfilePicture] = useState(null);
 
@@ -32,44 +43,39 @@ const ProfileComponent = () => {
     setNewProfilePicture(e.target.files[0]);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const updateToast = toast.loading("Updating profile...");
-
-    try {
-      const formData = new FormData();
-      formData.append("full_name", userData.full_name);
-      formData.append("user_name", userData.user_name);
-      formData.append("email", userData.email);
-      formData.append("bio", userData.bio);
-      if (newProfilePicture) {
-        formData.append("profilePicture", newProfilePicture);
-      }
-
-      const token = Cookies.get("token");
-      await axios.put("http://localhost:3000/api/users/profile", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-        withCredentials: true,
-      });
-
-      setIsEditing(false);
-      fetchUserData();
-      toast.success("Profile updated successfully", { id: updateToast });
-    } catch (error) {
-      console.error("Error updating user data:", error);
-      toast.error("Failed to update profile", { id: updateToast });
-    }
+  const uploadProfilePicture = async (file) => {
+    const storageRef = ref(
+      storage,
+      `profile_pictures/${userData._id}/${file.name}`
+    );
+    await uploadBytes(storageRef, file);
+    return getDownloadURL(storageRef);
   };
 
-  if (isLoading) {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    let updatedUserData = { ...userData };
+
+    if (newProfilePicture) {
+      try {
+        const profilePictureUrl = await uploadProfilePicture(newProfilePicture);
+        updatedUserData.profilePicture = profilePictureUrl;
+      } catch (error) {
+        console.error("Error uploading profile picture:", error);
+        // You might want to show a toast notification here
+      }
+    }
+
+    patchUserProfile(updatedUserData, null, fetchUserData);
+    setIsEditing(false);
+  };
+
+  if (isUserLoading || isPatchLoading) {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    return <div>Error: {error}</div>;
+  if (userError || patchError) {
+    return <div>Error: {userError || patchError}</div>;
   }
 
   return (
