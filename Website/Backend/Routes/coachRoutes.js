@@ -9,6 +9,8 @@ const router = express.Router();
 // Route to get all coaches
 router.get("/", coachesController.getAllCoaches);
 router.get("/coach/:userId", coachesController.getCoachIdByUserId);
+router.get("/profile", authenticateJWT, coachesController.getCoachProfile);
+router.get("/profile/:userId", coachesController.getCoachByUserId);
 
 //PATCH Routes=========
 
@@ -18,8 +20,5 @@ router.patch(
   "/:coachId/toggle-activation",
   coachesController.toggleCoachActivation
 );
-
-// Route to update LinkedIn, skills, and about
-router.get("/profile", authenticateJWT, coachesController.getCoachProfile);
 
 module.exports = router;

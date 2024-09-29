@@ -6,7 +6,7 @@ exports.getAllCoaches = async (req, res) => {
   try {
     // Retrieve all coaches that are not deleted
     const coaches = await Coach.find({ isDeleted: false })
-      .populate("userId", "full_name user_name email role")
+      .populate("userId", "full_name user_name email role profilePicture")
       .exec();
 
     res.status(200).json(coaches);
@@ -107,6 +107,29 @@ exports.updateCoachProfile = async (req, res) => {
     return res.status(200).json(coachProfile);
   } catch (error) {
     console.error(error);
+    return res.status(500).json({ message: "Server error." });
+  }
+};
+
+// Get Coach by user id
+exports.getCoachByUserId = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Find the coach by userId
+    const coach = await Coach.findOne({ userId })
+      .populate("userId", "full_name user_name email role profilePicture")
+      .exec();
+
+    // Check if coach profile exists
+    if (!coach) {
+      return res.status(404).json({ message: "Coach not found." });
+    }
+
+    // Return the coach profile
+    return res.status(200).json(coach);
+  } catch (error) {
+    console.error("Error fetching coach:", error);
     return res.status(500).json({ message: "Server error." });
   }
 };
