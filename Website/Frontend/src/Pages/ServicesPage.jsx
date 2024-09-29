@@ -20,6 +20,7 @@ import { Slider } from "@/Components/ui/slider";
 import { Grid, List, User, Clock, Tag, DollarSign } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { Section } from "@/Components/styles-components/containers";
+import FilterComponent from "@/Components/FilterComponent";
 
 const ServicesPage = () => {
   const [services, setServices] = useState([]);
@@ -29,6 +30,7 @@ const ServicesPage = () => {
   const [duration, setDuration] = useState([0, 180]);
   const [price, setPrice] = useState([0, 100]);
   const [sortBy, setSortBy] = useState("default");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -85,6 +87,10 @@ const ServicesPage = () => {
     return result;
   }, [services, searchTerm, serviceType, duration, price, sortBy]);
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   const ServiceCard = ({ service }) => (
     <Card className="h-full flex flex-col">
       <CardHeader>
@@ -124,99 +130,32 @@ const ServicesPage = () => {
       <Helmet>
         <title>JobReady | Services</title>
       </Helmet>
-      <div>
-        <div>
-          <div className="container mx-auto p-4 min-h-screen grid grid-cols-4">
-            {/* Left sidebar for filters */}
-            <Card className="sticky top-4  mr-4 h-screen border-none w-full">
-              <CardHeader>
-                <CardTitle>Filters</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-10 w-full">
-                <Input
-                  type="text"
-                  placeholder="Search by coach name"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
 
-                <Select onValueChange={setServiceType} value={serviceType}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select service type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Types</SelectItem>
-                    <SelectItem value="Interview Preparation">
-                      Interview Preparation
-                    </SelectItem>
-                    <SelectItem value="Resume Review">Resume Review</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                <div>
-                  <p>
-                    Duration (minutes): {duration[0]} - {duration[1]}
-                  </p>
-                  <Slider
-                    min={0}
-                    max={180}
-                    step={15}
-                    value={duration}
-                    onValueChange={setDuration}
-                    className="w-full"
-                  />
-                </div>
-
-                <div>
-                  <p>
-                    Price: {price[0]} - {price[1]}
-                  </p>
-                  <Slider
-                    min={0}
-                    max={100}
-                    step={10}
-                    value={price}
-                    onValueChange={setPrice}
-                  />
-                </div>
-
-                <Select onValueChange={setSortBy} value={sortBy}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Sort by" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="default">Default</SelectItem>
-                    <SelectItem value="price-asc">
-                      Price: Low to High
-                    </SelectItem>
-                    <SelectItem value="price-desc">
-                      Price: High to Low
-                    </SelectItem>
-                    <SelectItem value="duration-asc">
-                      Duration: Short to Long
-                    </SelectItem>
-                    <SelectItem value="duration-desc">
-                      Duration: Long to Short
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </CardContent>
-            </Card>
-
-            {/* Right side for services display */}
-            <div className=" col-span-3">
-              <div
-                className={
-                  isGridView
-                    ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-                    : "space-y-4"
-                }
-              >
-                {filteredAndSortedServices.map((service) => (
-                  <ServiceCard key={service._id} service={service} />
-                ))}
-              </div>
-            </div>
+      <div className="grid grid-cols-1 md:grid-col-2  lg:grid-cols-4 min-h-screen">
+        {/* <Filter /> */}
+        <FilterComponent
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          serviceType={serviceType}
+          setServiceType={setServiceType}
+          duration={duration}
+          setDuration={setDuration}
+          price={price}
+          setPrice={setPrice}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+        />
+        <div className="col-span-1 md:col-span-2 lg:col-span-3">
+          <div
+            className={
+              isGridView
+                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                : "space-y-4"
+            }
+          >
+            {filteredAndSortedServices.map((service) => (
+              <ServiceCard key={service._id} service={service} />
+            ))}
           </div>
         </div>
       </div>

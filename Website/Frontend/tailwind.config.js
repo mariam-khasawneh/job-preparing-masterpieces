@@ -65,5 +65,11 @@ export default {
       },
     },
   },
+  variants: {
+    extend: {
+      // ...other variant extensions
+      translate: ["responsive", "hover", "focus", "active", "group-hover"],
+    },
+  },
   plugins: [require("tailwindcss-animate")],
 };

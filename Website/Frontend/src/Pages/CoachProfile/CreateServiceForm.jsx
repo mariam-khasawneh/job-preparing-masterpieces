@@ -24,6 +24,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/Components/ui/alert";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { Helmet } from "react-helmet-async";
+// data
+import ServiceTypes from "@/Data/ServicesTypes";
 
 const CreateServiceForm = () => {
   const {
@@ -110,14 +112,11 @@ const CreateServiceForm = () => {
                     <SelectValue placeholder="Select a service type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Consultation">Consultation</SelectItem>
-                    <SelectItem value="Resume Review">Resume Review</SelectItem>
-                    <SelectItem value="Interview Preparation">
-                      Interview Preparation
-                    </SelectItem>
-                    <SelectItem value="Career Guidance">
-                      Career Guidance
-                    </SelectItem>
+                    {ServiceTypes.map((type) => (
+                      <SelectItem key={type} value={type}>
+                        {type}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 {errors.serviceType && (
