@@ -234,7 +234,7 @@ The Coaching Team`;
             <DialogHeader>
               <DialogTitle>Request Details</DialogTitle>
             </DialogHeader>
-            {selectedRequest && (
+            {selectedRequest && selectedRequest.userId && (
               <div>
                 <p>
                   <strong>Name:</strong> {selectedRequest.userId.full_name}
@@ -252,7 +252,7 @@ The Coaching Team`;
                   {selectedRequest.educationalBackground.map((edu, index) => (
                     <li key={index}>
                       {edu.university} - {edu.major} ({edu.credential}) -{" "}
-                      {edu.period}
+                      {edu.startDate} - {edu.endDate}
                     </li>
                   ))}
                 </ul>

@@ -5,7 +5,8 @@ const educationalBackgroundSchema = new Schema({
   university: { type: String, required: true },
   credential: { type: String, required: true },
   major: { type: String, required: true },
-  period: { type: String, required: true }, // E.g., "2010-2014"
+  startDate: { type: Date, required: true },
+  endDate: { type: Date, required: true },
 });
 
 const coachRequestSchema = new Schema(

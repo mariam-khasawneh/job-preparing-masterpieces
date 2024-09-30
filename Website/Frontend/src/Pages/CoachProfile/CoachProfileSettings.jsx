@@ -28,7 +28,13 @@ const CoachProfileSettings = () => {
   const [formData, setFormData] = useState({
     experience: "",
     educationalBackground: [
-      { university: "", credential: "", major: "", period: "" },
+      {
+        university: "",
+        credential: "",
+        major: "",
+        startDate: "",
+        endDate: "",
+      },
     ],
     skills: [],
     about: "",
@@ -42,7 +48,15 @@ const CoachProfileSettings = () => {
         educationalBackground:
           coachProfile.educationalBackground.length > 0
             ? coachProfile.educationalBackground
-            : [{ university: "", credential: "", major: "", period: "" }],
+            : [
+                {
+                  university: "",
+                  credential: "",
+                  major: "",
+                  startDate: "",
+                  endDate: "",
+                },
+              ],
         skills: coachProfile.skills || [],
         about: coachProfile.about || "",
         linkedIn: coachProfile.linkedIn || "",
@@ -63,7 +77,13 @@ const CoachProfileSettings = () => {
       ...prevState,
       educationalBackground: [
         ...prevState.educationalBackground,
-        { university: "", credential: "", major: "", period: "" },
+        {
+          university: "",
+          credential: "",
+          major: "",
+          startDate: "",
+          endDate: "",
+        },
       ],
     }));
   };
@@ -138,13 +158,22 @@ const CoachProfileSettings = () => {
                   handleEducationChange(index, "major", e.target.value)
                 }
               />
-              <Input
-                placeholder="Period"
-                value={edu.period}
-                onChange={(e) =>
-                  handleEducationChange(index, "period", e.target.value)
-                }
-              />
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Start Date"
+                  value={edu.startDate}
+                  onChange={(e) =>
+                    handleEducationChange(index, "startDate", e.target.value)
+                  }
+                />{" "}
+                <Input
+                  placeholder="End Date"
+                  value={edu.endDate}
+                  onChange={(e) =>
+                    handleEducationChange(index, "endDate", e.target.value)
+                  }
+                />
+              </div>
             </div>
           ))}
         </CardContent>

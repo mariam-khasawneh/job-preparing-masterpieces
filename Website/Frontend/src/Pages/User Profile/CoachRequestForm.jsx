@@ -26,7 +26,14 @@ const CoachRequestForm = () => {
   const [formData, setFormData] = useState({
     experience: "",
     educationalBackground: [
-      { university: "", credential: "", major: "", period: "" },
+      {
+        university: "",
+        credential: "",
+        major: "",
+        // period: "",
+        startDate: "",
+        endDate: "",
+      },
     ],
   });
   const [user, setUser] = useState({ _id: "" });
@@ -82,7 +89,14 @@ const CoachRequestForm = () => {
       ...prev,
       educationalBackground: [
         ...prev.educationalBackground,
-        { university: "", credential: "", major: "", period: "" },
+        {
+          university: "",
+          credential: "",
+          major: "",
+          // period: "",
+          startDate: "",
+          endDate: "",
+        },
       ],
     }));
   };
@@ -194,13 +208,29 @@ const CoachRequestForm = () => {
                   handleEducationChange(index, "major", e.target.value)
                 }
               />
-              <Input
+              {/* <Input
                 placeholder="Period"
                 value={edu.period}
                 onChange={(e) =>
                   handleEducationChange(index, "period", e.target.value)
                 }
-              />
+              /> */}
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Start Date"
+                  value={edu.startDate}
+                  onChange={(e) =>
+                    handleEducationChange(index, "startDate", e.target.value)
+                  }
+                />
+                <Input
+                  placeholder="End Date"
+                  value={edu.endDate}
+                  onChange={(e) =>
+                    handleEducationChange(index, "endDate", e.target.value)
+                  }
+                />
+              </div>
               {index > 0 && (
                 <Button
                   onClick={() => removeEducation(index)}

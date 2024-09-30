@@ -121,3 +121,82 @@ exports.reviewRequest = async (req, res) => {
     res.status(500).json({ error: "Failed to update coach request." });
   }
 };
+
+// exports.reviewRequest = async (req, res) => {
+//   const { requestId } = req.params;
+//   const { status, comments } = req.body;
+
+//   if (!["approved", "rejected"].includes(status)) {
+//     return res
+//       .status(400)
+//       .json({ error: "Invalid status. Must be 'approved' or 'rejected'." });
+//   }
+
+//   const session = await mongoose.startSession();
+//   session.startTransaction();
+
+//   try {
+//     const updatedRequest = await CoachRequest.findByIdAndUpdate(
+//       requestId,
+//       {
+//         status,
+//         comments,
+//         reviewDate: Date.now(),
+//       },
+//       { new: true, session }
+//     );
+
+//     if (!updatedRequest) {
+//       throw new Error("Coach request not found.");
+//     }
+
+//     if (status === "approved") {
+//       const {
+//         userId,
+//         cv,
+//         experience,
+//         educationalBackground,
+//         introductoryVideo,
+//       } = updatedRequest;
+
+//       // Validate required fields
+//       if (
+//         !userId ||
+//         !cv ||
+//         !experience ||
+//         !educationalBackground ||
+//         !introductoryVideo
+//       ) {
+//         throw new Error("Missing required fields for coach creation.");
+//       }
+
+//       const newCoach = new Coach({
+//         userId,
+//         cv,
+//         experience,
+//         educationalBackground,
+//         introductoryVideo,
+//         approvedDate: Date.now(),
+//       });
+
+//       await newCoach.save({ session });
+
+//       await User.findByIdAndUpdate(userId, { role: "coach" }, { session });
+//     }
+
+//     await session.commitTransaction();
+//     res.status(200).json(updatedRequest);
+//   } catch (err) {
+//     await session.abortTransaction();
+//     console.error("Error updating coach request:", err);
+//     if (err.message === "Coach request not found.") {
+//       res.status(404).json({ error: err.message });
+//     } else if (err.message === "Missing required fields for coach creation.") {
+//       res.status(400).json({ error: err.message });
+//     } else {
+//       res.status(500).json({ error: "Failed to update coach request." });
+//     }
+//   } finally {
+//     session.endSession();
+//   }
+// };

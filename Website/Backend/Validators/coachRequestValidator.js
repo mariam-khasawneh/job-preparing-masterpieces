@@ -5,7 +5,8 @@ const educationalBackgroundSchema = Joi.object({
   university: Joi.string().required(),
   credential: Joi.string().required(),
   major: Joi.string().required(),
-  period: Joi.string().required(),
+  startDate: Joi.date().required(),
+  endDate: Joi.date().required(),
 });
 
 // Define the schema for the CoachRequest
