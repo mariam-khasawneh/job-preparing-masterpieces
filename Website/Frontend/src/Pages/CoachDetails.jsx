@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
 import { Badge } from "@/Components/ui/badge";
 import { Button } from "@/Components/ui/button";
@@ -9,14 +9,29 @@ const CoachDetails = () => {
   const [coach, setCoach] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { id } = useParams();
+  const location = useLocation();
+  const { userId } = location.state || {};
 
   useEffect(() => {
     const fetchCoachDetails = async () => {
+      if (!userId) {
+        setError("Coach ID is missing");
+        setLoading(false);
+        return;
+      }
+
       try {
         const response = await fetch(
-          `http://localhost:3000/api/coaches/profile/${id}`
+          "http://localhost:3000/api/coaches/details",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userId }),
+          }
         );
+
         if (!response.ok) {
           throw new Error("Failed to fetch coach details");
         }
@@ -30,7 +45,7 @@ const CoachDetails = () => {
     };
 
     fetchCoachDetails();
-  }, [id]);
+  }, [userId]);
 
   if (loading) {
     return (

@@ -10,7 +10,7 @@ const router = express.Router();
 router.get("/", coachesController.getAllCoaches);
 router.get("/coach/:userId", coachesController.getCoachIdByUserId);
 router.get("/profile", authenticateJWT, coachesController.getCoachProfile);
-router.get("/profile/:userId", coachesController.getCoachByUserId);
+router.post("/details", coachesController.getCoachDetails);
 
 //PATCH Routes=========
 

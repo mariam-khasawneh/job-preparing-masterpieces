@@ -112,8 +112,8 @@ exports.updateCoachProfile = async (req, res) => {
 };
 
 // Get Coach by user id
-exports.getCoachByUserId = async (req, res) => {
-  const { userId } = req.params;
+exports.getCoachDetails = async (req, res) => {
+  const { userId } = req.body;
 
   try {
     // Find the coach by userId

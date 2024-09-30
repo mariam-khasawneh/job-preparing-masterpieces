@@ -103,7 +103,7 @@ function Content() {
         <Route path="ScheduleMeeting" element={<ScheduleMeeting />} />
         <Route path="services" element={<ServicesPage />} />
         <Route path="*" element={<NotFound />} />
-        <Route path="/coaches/:id" element={<CoachDetails />} />
+        <Route path="/coach-details" element={<CoachDetails />} />
 
         {/* Protected Routes */}
         <Route
