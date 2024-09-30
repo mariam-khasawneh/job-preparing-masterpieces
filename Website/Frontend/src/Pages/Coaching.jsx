@@ -140,6 +140,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
 import { Badge } from "@/Components/ui/badge";
 import { Button } from "@/Components/ui/button";
 import { Loader2 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 function Coaches() {
   return (
@@ -227,9 +228,11 @@ const CoachesGrid = () => {
               </div>
             </CardContent>
             <CardFooter className="flex justify-between">
-              <Button variant="default" size="sm">
-                View Profile
-              </Button>
+              <Link to={`/coaches/${coach.userId._id}`} className="w-full">
+                <Button variant="default" size="sm" className="w-full">
+                  View Profile
+                </Button>
+              </Link>
             </CardFooter>
           </Card>
         ))}

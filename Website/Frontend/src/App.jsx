@@ -34,6 +34,7 @@ import SignUp from "./Pages/SignUp";
 import VideoChat from "./Pages/videoChat";
 import ProtectedComponent from "./Pages/ProtectedComponent";
 import ServicesPage from "./Pages/ServicesPage";
+import CoachDetails from "./Pages/CoachDetails";
 
 // Protected Pages  ===============================
 import ProtectedRoute from "./Components/ProtectedRoute";
@@ -102,6 +103,7 @@ function Content() {
         <Route path="ScheduleMeeting" element={<ScheduleMeeting />} />
         <Route path="services" element={<ServicesPage />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/coaches/:id" element={<CoachDetails />} />
 
         {/* Protected Routes */}
         <Route
