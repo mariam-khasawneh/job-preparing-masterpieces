@@ -1,6 +1,17 @@
-import { H6, SmallBody, Caption } from "../Typography-components/Typography";
-
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/Components/ui/table";
+import { Button } from "@/Components/ui/button";
 import { Link } from "react-router-dom";
+import { ArrowUpRight } from "lucide-react";
+
 function CoursesCard() {
   const courses = [
     {
@@ -26,59 +37,40 @@ function CoursesCard() {
   ];
 
   return (
-    <div className="flex flex-col p-8 items-start gap-6 rounded-2xl border-2	 border-slate-200  ">
-      <H6 className="font-semibold text-slate-900 leading-5	">Courses</H6>
-      <div className=" flex flex-col gap-7 w-full ">
-        {courses.map((props, key) => (
-          <CourseRow key={key} {...props} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function CourseRow({ name, lessons, price }) {
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 sm:gap-6 border-b pb-3">
-      <div className="sm:col-span-2">
-        <SmallBody className="font-semibold text-slate-700">{name}</SmallBody>
-      </div>
-      <div>
-        <Caption className="text-slate-500 font-medium">{lessons}</Caption>
-      </div>
-      <div>
-        <Caption className="text-slate-500 font-semibold">{price}</Caption>
-      </div>
-      <Link>
-        <div className="flex flex-row gap-2 justify-end">
-          <Caption className="font-semibold text-indigo-600">
-            View Course
-          </Caption>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-          >
-            <path
-              d="M3.19922 12.7992L12.7992 3.19922"
-              stroke="#4F46E5"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M12.7992 8.79922V3.19922H7.19922"
-              stroke="#4F46E5"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </div>
-      </Link>
-    </div>
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle className="text-lg font-semibold">Courses</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Lessons</TableHead>
+              <TableHead>Price</TableHead>
+              <TableHead className="text-right">Action</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {courses.map((course, index) => (
+              <TableRow key={index}>
+                <TableCell className="font-medium">{course.name}</TableCell>
+                <TableCell>{course.lessons}</TableCell>
+                <TableCell>{course.price}</TableCell>
+                <TableCell className="text-right">
+                  <Button variant="link" asChild>
+                    <Link to="#">
+                      View Course
+                      <ArrowUpRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
   );
 }
 

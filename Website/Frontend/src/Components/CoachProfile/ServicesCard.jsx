@@ -1,4 +1,6 @@
-import { Caption, H6, SmallBody } from "../Typography-components/Typography";
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
+import { Separator } from "@/Components/ui/separator";
 
 function ServicesCard() {
   const services = [
@@ -25,28 +27,27 @@ function ServicesCard() {
   ];
 
   return (
-    <div className="flex flex-col p-8 items-start gap-6 rounded-2xl border-2 border-slate-200">
-      <H6 className="font-semibold text-slate-900 leading-5">Services</H6>
-      <div className="flex flex-col gap-7 w-full">
-        {services.map((props, key) => (
-          <ServiceRow key={key} {...props} />
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-lg font-semibold">Services</CardTitle>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-6">
+        {services.map((props, index) => (
+          <React.Fragment key={index}>
+            <ServiceRow {...props} />
+            {index < services.length - 1 && <Separator />}
+          </React.Fragment>
         ))}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
 
 function ServiceRow({ service, description }) {
   return (
-    <div className="flex flex-row gap-8 w-full self-stretch border-b pb-3">
-      <div id="content" className="flex flex-col gap-1 w-full">
-        <div className="flex flex-col md:flex-row justify-between">
-          <SmallBody className="font-semibold text-slate-700">
-            {service}
-          </SmallBody>
-        </div>
-        <Caption className="text-slate-500">{description}</Caption>
-      </div>
+    <div className="flex flex-col gap-1">
+      <h3 className="text-sm font-semibold text-slate-700">{service}</h3>
+      <p className="text-xs text-slate-500">{description}</p>
     </div>
   );
 }

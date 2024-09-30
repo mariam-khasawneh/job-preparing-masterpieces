@@ -1,19 +1,30 @@
-import { H6 } from "../Typography-components/Typography";
-import Badges from "../Badges";
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
+import { Badge } from "@/Components/ui/badge";
 
 function SkillsCard() {
+  const skills = [
+    "Active Listening",
+    "Empathy",
+    "Communication",
+    "Motivational Techniques",
+  ];
+
   return (
-    <div className="flex flex-col p-8 items-start gap-5 rounded-2xl border-2	 border-slate-200  ">
-      <H6 className="font-semibold text-slate-900 leading-5	">Skills</H6>
-      <div className="flex gap-2 flex-wrap">
-        <Badges>Active Listening</Badges>
-        <Badges>Empathy</Badges>
-        <Badges>Communication</Badges>
-        <Badges>Active Listening</Badges>
-        <Badges>Communication</Badges>
-        <Badges>Motivational Techniques</Badges>
-      </div>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-lg font-semibold">Skills</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="flex gap-2 flex-wrap">
+          {skills.map((skill, index) => (
+            <Badge key={index} variant="default">
+              {skill}
+            </Badge>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
