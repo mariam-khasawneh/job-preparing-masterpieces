@@ -1,5 +1,6 @@
 const Coach = require("../Models/coachModel");
 const User = require("../Models/userModel");
+const Service = require("../Models/serviceModel");
 
 // Get all coaches
 exports.getAllCoaches = async (req, res) => {

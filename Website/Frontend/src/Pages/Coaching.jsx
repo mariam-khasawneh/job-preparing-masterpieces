@@ -49,8 +49,8 @@ const CoachesGrid = () => {
     fetchCoaches();
   }, []);
 
-  const handleViewProfile = (userId) => {
-    navigate("/coach-details", { state: { userId } });
+  const handleViewProfile = (userId, coachId) => {
+    navigate("/coach-profile", { state: { userId, coachId } });
   };
 
   if (loading) {
@@ -110,7 +110,7 @@ const CoachesGrid = () => {
                 variant="default"
                 size="sm"
                 className="w-full"
-                onClick={() => handleViewProfile(coach.userId._id)}
+                onClick={() => handleViewProfile(coach.userId._id, coach._id)}
               >
                 View Profile
               </Button>

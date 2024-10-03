@@ -104,3 +104,51 @@ exports.deleteService = async (req, res) => {
     res.status(500).json({ message: "Failed to delete service", error });
   }
 };
+
+// Get services for a specific coach by user ID
+exports.getCoachServices = async (req, res) => {
+  console.log("User ID from request:", req.user.id);
+  try {
+    const userId = req.user.id;
+
+    // Get the coach ID using the user ID
+    const coachId = await coachController.getCoachIdByUserId(userId);
+    if (!coachId) {
+      return res.status(404).json({ message: "Coach not found" });
+    }
+
+    // Find services associated with the coach ID
+    const services = await Service.find({ coachId, isDeleted: false });
+
+    if (services.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No services found for this coach" });
+    }
+
+    res.status(200).json(services);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to get coach services", error });
+    console.log(error);
+  }
+};
+
+// Get services for a specific coach by coach ID
+exports.getServicesByCoachId = async (req, res) => {
+  const { coachId } = req.body;
+
+  try {
+    const services = await Service.find({ coachId, isDeleted: false });
+
+    if (!services || services.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No services found for this coach" });
+    }
+
+    res.status(200).json(services);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to retrieve services", error });
+    console.log(error);
+  }
+};

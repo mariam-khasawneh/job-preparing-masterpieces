@@ -8,7 +8,6 @@ const router = express.Router();
 
 // Route to get all coaches
 router.get("/", coachesController.getAllCoaches);
-router.get("/coach/:userId", coachesController.getCoachIdByUserId);
 router.get("/profile", authenticateJWT, coachesController.getCoachProfile);
 router.post("/details", coachesController.getCoachDetails);
 
