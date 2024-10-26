@@ -14,6 +14,7 @@ import {
   UserPlus,
   User,
   SquarePlus,
+  CalendarCheck,
 } from "lucide-react";
 const Sidebar = ({
   setActivePage,
@@ -45,6 +46,7 @@ const Sidebar = ({
           { name: "Coach Request", icon: <UserPlus size={20} /> },
           { name: "Coach Profile", icon: <User size={20} /> },
           { name: "Create Service", icon: <SquarePlus size={20} /> },
+          { name: "Set Avilability", icon: <CalendarCheck size={20} /> },
         ].map((item) => (
           <li key={item.name} className="mb-2">
             <button

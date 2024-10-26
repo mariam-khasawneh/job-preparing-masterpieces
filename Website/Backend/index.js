@@ -35,6 +35,7 @@ const coachRequestRoutes = require("./Routes/coachRequestRoutes.js");
 const emailMessageRoutes = require("./Routes/emailMessageRoutes.js");
 const coacheRoutes = require("./Routes/coachRoutes.js");
 const serviceRoutes = require("./Routes/serviceRoutes.js");
+const availabilityRoutes = require("./Routes/availabilityRoutes.js");
 
 // Use Routes
 app.use("/api/users", userRoutes);
@@ -43,6 +44,7 @@ app.use("/api/coach-request", coachRequestRoutes);
 app.use("/api/send-email", emailMessageRoutes);
 app.use("/api/coaches", coacheRoutes);
 app.use("/api/services", serviceRoutes);
+app.use("/api/availability", availabilityRoutes);
 
 // Main Routes
 app.get("/", (req, res) => {

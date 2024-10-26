@@ -3,6 +3,7 @@ import Sidebar from "./Sidebar";
 import OverViewPage from "./OverViewPage";
 import SessionsPage from "./SessionsPage";
 import CoursesPage from "./CoursesPage";
+import SetAvailability from "./SetAvailability";
 import Account from "./Account";
 import CoachRequestForm from "./CoachRequestForm";
 import CoachProfileSettings from "../CoachProfile/CoachProfileSettings";
@@ -32,6 +33,8 @@ const UserProfilePage = () => {
         return <CoachProfileSettings />;
       case "Create Service":
         return <CreateServiceForm />;
+      case "Set Avilability":
+        return <SetAvailability />;
       default:
         return <div>Page not found</div>;
     }

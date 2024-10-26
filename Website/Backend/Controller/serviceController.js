@@ -20,7 +20,6 @@ exports.createService = async (req, res) => {
 
     const coachId = await coachController.getCoachIdByUserId(userId);
     console.log("coach Id : ", coachId);
-
     const { service, description, price, currency, duration, serviceType } =
       req.body;
     const newService = new Service({
